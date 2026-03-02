@@ -7,7 +7,7 @@ export function meta({}: Route.MetaArgs) {
 
 export default function Home() {
   return (
-    <main className="flex-grow pt-16">
+    <main className="grow pt-16">
       <header 
         className="relative h-[calc(100vh-4rem)] bg-cover bg-center"
         style={{ backgroundImage: "url('/tlo.jpg')" }}
