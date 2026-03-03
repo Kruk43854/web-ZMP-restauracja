@@ -1,9 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&display=swap');
 
-/* Nowy sposób ładowania Tailwinda w wersji 4 */
 @import "tailwindcss";
 
-/* Nowy sposób dodawania własnych czcionek w wersji 4 */
 @theme {
   --font-fancy: "Dancing Script", cursive;
 }

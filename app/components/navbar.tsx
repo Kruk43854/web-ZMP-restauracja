@@ -7,14 +7,14 @@ export default function Navbar() {
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
   return (
-    <nav className="bg-green-700 fixed w-full z-20 top-0 border-b border-green-800 shadow-md">
+    <nav className="bg-green-500 fixed w-full z-20 top-0 border-b border-green-800 shadow-md">
       <div className="max-w-7xl flex flex-wrap items-center justify-between mx-auto p-4">
         
         <Link to="/" className="flex items-center space-x-3 rtl:space-x-reverse">
         {/* tu bedzie logo */}
           <p className="text-2xl font-bold">🍕</p> 
-          <span className="self-center text-2xl font-semibold whitespace-nowrap text-white">
-            Qui la Carne
+          <span className="self-center text-4xl font-semibold font-fancy whitespace-nowrap text-white">
+            <i>Qui la Carne</i>
           </span>
         </Link>
 
@@ -32,10 +32,12 @@ export default function Navbar() {
         </button>
 
         <div className={`${isMenuOpen ? 'block' : 'hidden'} w-full md:block md:w-auto`} id="navbar-default">
-          <ul className="font-medium flex flex-col p-4 md:p-0 mt-4 border border-green-800 rounded-lg bg-green-700 md:flex-row md:space-x-2 md:mt-0 md:border-0">
-            <li><Link to="/menu" className="block py-2 px-4 text-white rounded-2xl hover:bg-green-800 transition-colors">Menu</Link></li>
-            <li><Link to="/reservation" className="block py-2 px-4 text-white rounded-2xl hover:bg-green-800 transition-colors">Rezerwacja</Link></li>
-            <li><Link to="/about" className="block py-2 px-4 text-white rounded-2xl hover:bg-green-800 transition-colors">O nas</Link></li>
+         <ul className="font-medium flex flex-col p-2 mt-2 rounded-2xl bg-green-700 md:p-0.5 md:w-auto md:flex-row md:gap-1 md:mt-0 md:border-0 items-center">
+            <li><Link to="/menu" className="block py-2 px-4 text-center text-white rounded-2xl hover:bg-green-800 transition-colors">Menu</Link></li>
+            <li><Link to="/reservation" className="block py-2 px-4 text-center text-white rounded-2xl hover:bg-green-800 transition-colors">Rezerwacja</Link></li>
+            <li><Link to="/about" className="block py-2 px-4 text-center text-white rounded-2xl hover:bg-green-800 transition-colors">O nas</Link></li>
+            <li className='md:hidden border-green-500 pt-2'><Link to="/login" className="block py-2 px-4 text-center text-white rounded-2xl hover:bg-green-800 transition-colors">Logowanie</Link></li>
+            <li className='md:hidden border-green-500 pt-2'><Link to="/register" className="block py-2 px-4 text-center text-white rounded-2xl hover:bg-green-800 transition-colors">Rejestracja</Link></li>
           </ul>
         </div>
       </div>
