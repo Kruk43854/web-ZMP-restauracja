@@ -182,7 +182,6 @@ const prevSlide = () => {
             
           </div>
 
-          {/* Przyciski nawigacji */}
           <button 
             onClick={prevSlide}
             className="absolute top-1/2 -left-4 md:-left-8 transform -translate-y-1/2 bg-white w-12 h-12 flex items-center justify-center rounded-full shadow-lg text-red-600 hover:bg-red-50 hover:scale-110 transition-all focus:outline-none ring-1 ring-gray-200"
@@ -199,7 +198,6 @@ const prevSlide = () => {
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path></svg>
           </button>
 
-          {/* Kropki na dole (Wskaźniki) */}
           <div className="flex justify-center mt-8 gap-2">
             {bestsellers.map((_, index) => (
               <button
