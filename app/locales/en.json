@@ -1,0 +1,12 @@
+{
+  "navbar": {
+    "menu": "Menu",
+    "reservation": "Reservation",
+    "about": "About Us",
+    "login": "Login",
+    "register": "Register",
+    "settings": "Settings",
+    "userMenu": "User Menu",
+    "openMenu": "Open main menu"
+  }
+}
