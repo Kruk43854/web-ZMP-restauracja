@@ -1,5 +1,5 @@
 {
-  "navbar": {
+  "navbar": { 
     "menu": "Menu",
     "reservation": "Reservation",
     "about": "About Us",
@@ -8,5 +8,50 @@
     "settings": "Settings",
     "userMenu": "User Menu",
     "openMenu": "Open main menu"
+    },
+  "home": {
+    "hero": {
+      "subtitle": "The best Italian restaurant in Poland!",
+      "menuBtn": "View Menu",
+      "reserveBtn": "Book a Table"
+    },
+    "about": {
+      "title": "Who are we?",
+      "p1": "We are Italian brothers who decided to bring the secrets of our family kitchen into interiors full of modern elegance.",
+      "p2": "We believe that true Italian hospitality is a combination of respect for tradition with a touch of contemporary chic. Here, every dish tells the story of our home, and carefully selected ingredients straight from Italy make authentic flavors taste best here. We invite you to the table where time flows slower."
+    },
+    "why": {
+      "title": "Why visit us?",
+      "f1": {
+        "title": "Authentic flavors",
+        "desc": "We import the best products straight from Italy. With us, you will eat just like in the heart of Naples, with no compromises on quality."
+      },
+      "f2": {
+        "title": "Instant reservation",
+        "desc": "Don't wait in line. Book your favorite table for the evening in a few seconds thanks to our convenient online system."
+      },
+      "f3": {
+        "title": "Family atmosphere",
+        "desc": "Italian hospitality is our showcase. At <i>Qui la Carne</i>, every guest is treated like a member of our family."
+      }
+    },
+    "carousel": {
+      "title": "Our best dishes",
+      "subtitle": "The dishes that keep our guests coming back every day."
+    },
+    "bestsellers": {
+      "pizza": {
+        "name": "Pizza Margherita Autentico",
+        "desc": "Classic Neapolitan pizza with San Marzano tomatoes, fresh buffalo mozzarella, and basil."
+      },
+      "steak": {
+        "name": "Bistecca alla Fiorentina",
+        "desc": "The queen of Italian steaks. A massive bone-in beef steak, grilled with sea salt and rosemary."
+      },
+      "pasta": {
+        "name": "Pasta al Tartufo",
+        "desc": "Handmade tagliatelle pasta enveloped in a velvety black truffle sauce and parmesan."
+      }
+    }
   }
 }

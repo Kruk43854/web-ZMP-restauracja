@@ -8,5 +8,50 @@
     "settings": "Ustawienia",
     "userMenu": "Menu użytkownika",
     "openMenu": "Otwórz menu"
+  },
+  "home": {
+    "hero": {
+      "subtitle": "Najlepsza włoska restauracja w Polsce!",
+      "menuBtn": "Zobacz Menu",
+      "reserveBtn": "Zarezerwuj stolik"
+    },
+    "about": {
+      "title": "Kim jesteśmy?",
+      "p1": "Jesteśmy włoskimi braćmi, którzy postanowili przenieść sekrety naszej rodzinnej kuchni do wnętrz pełnych nowoczesnej elegancji.",
+      "p2": "Wierzymy, że prawdziwa włoska gościnność to połączenie szacunku do tradycji z odrobiną współczesnego szyku. U nas każde danie opowiada historię naszego domu, a starannie wyselekcjonowane składniki prosto z Italii sprawiają, że autentyczne smaki smakują tu najlepiej. Zapraszamy do stołu, gdzie czas płynie wolniej."
+    },
+    "why": {
+      "title": "Dlaczego warto nas odwiedzić?",
+      "f1": {
+        "title": "Autentyczne smaki",
+        "desc": "Sprowadzamy najlepsze produkty prosto z Włoch. U nas zjesz tak, jak w sercu Neapolu, bez kompromisów w jakości."
+      },
+      "f2": {
+        "title": "Błyskawiczna rezerwacja",
+        "desc": "Nie czekaj w kolejce. Zarezerwuj swój ulubiony stolik na wieczór w kilka sekund dzięki naszemu wygodnemu systemowi online."
+      },
+      "f3": {
+        "title": "Rodzinna atmosfera",
+        "desc": "Włoska gościnność to nasza wizytówka. W <i>Qui la Carne</i> każdy gość traktowany jest jak członek naszej rodziny."
+      }
+    },
+    "carousel": {
+      "title": "Nasze najlepsze dania",
+      "subtitle": "Dania, dla których goście wracają do nas każdego dnia."
+    },
+    "bestsellers": {
+      "pizza": {
+        "name": "Pizza Margherita Autentico",
+        "desc": "Klasyczna neapolitańska pizza z pomidorami San Marzano, świeżą mozzarellą di bufala i bazylią."
+      },
+      "steak": {
+        "name": "Bistecca alla Fiorentina",
+        "desc": "Królowa włoskich steków. Potężny kawałek wołowiny z kością, grillowany z solą morską i rozmarynem."
+      },
+      "pasta": {
+        "name": "Pasta al Tartufo",
+        "desc": "Ręcznie robiony makaron tagliatelle otulony aksamitnym sosem z czarnej trufli i parmezanem."
+      }
+    }
   }
 }
