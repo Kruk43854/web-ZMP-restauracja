@@ -13,14 +13,14 @@ Projekt opiera się na:
 * **Tłumaczenia (i18n):** `react-i18next`
 * **Komunikacja z API:** natywny `fetch` API
 
-## ✨ Główne funkcjonalności
+##  Główne funkcjonalności
 
 * **Internacjonalizacja (i18n):** Pełne wsparcie dla języka polskiego i angielskiego ze zmianą w locie z poziomu nawigacji.
 * **Autoryzacja (JWT):** Rejestracja i logowanie użytkowników, obsługa błędów z serwera, zapisywanie tokenów w `localStorage`.
 * **Dynamiczny Routing:** Płynne przechodzenie między widokami bez przeładowywania strony (React Router).
 * **Responsywny UI:** W pełni dopasowany do urządzeń mobilnych układ (Tailwind CSS).
 
-## 🚀 Uruchomienie projektu lokalnie
+##  Uruchomienie projektu lokalnie
 
 ### Wymagania wstępne
 Zainstaluj:
