@@ -30,8 +30,8 @@ Zainstaluj:
 ### Instalacja i uruchomienie
 
 1. Sklonuj repozytorium:
-   ```bash
-   git clone https://github.com/Kruk43854/web-ZMP-restauracja
+```bash
+git clone https://github.com/Kruk43854/web-ZMP-restauracja
 ```
 
    Zainstaluj zależności:
