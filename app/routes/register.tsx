@@ -14,6 +14,7 @@ export default function Register() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
+  const [isSuccess, setSuccess] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   
   const navigate = useNavigate();
@@ -38,6 +39,7 @@ export default function Register() {
 
     setIsLoading(true);
     setError("");
+    setSuccess(false);
 
     try {
         const response = await fetch('/api/auth/register', {
@@ -59,10 +61,11 @@ export default function Register() {
             data.errors.join(", ")) ??
           t("register.error_creation_failed");
         
-        setError(serverMsg);
+        setSuccess(serverMsg);
         return;
       }
-
+      
+      setSuccess(true);   
       setError(
         data?.message ?? t("register.success_message")
       );
@@ -71,6 +74,9 @@ export default function Register() {
       setEmail("");
       setPassword("");
       setConfirmPassword("");
+
+         setTimeout(() => navigate("/login"), 2000);
+
     } catch (error) {
       console.error(error);
       setError(t("register.connection_error"));
@@ -101,7 +107,11 @@ export default function Register() {
             className="bg-white p-8 rounded-3xl shadow-2xl flex flex-col gap-5 w-full text-black border border-gray-100"
           >
             {error && (
-              <div className="bg-red-50 text-red-600 p-3 rounded-xl text-sm font-medium border border-red-200">
+              <div className={`p-3 rounded-xl text-sm font-medium border text-center ${
+                isSuccess 
+                  ? 'bg-green-50 text-green-700 border-green-200' 
+                  : 'bg-red-50 text-red-600 border-red-200'
+              }`}>
                 {error}
               </div>
             )}
