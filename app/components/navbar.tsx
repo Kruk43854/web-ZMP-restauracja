@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { Link } from 'react-router';
+import { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router';
 import { useTranslation } from 'react-i18next'; 
 import i18n from '../i18n';
 
@@ -7,6 +7,19 @@ export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { t } = useTranslation();
   const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
+  
+  // NOWE: Stan przechowujący nazwę zalogowanego użytkownika
+  const [username, setUsername] = useState<string | null>(null);
+  const navigate = useNavigate();
+
+  // NOWE: Hook sprawdzający LocalStorage przy każdym renderowaniu Navbara
+  useEffect(() => {
+    // Sprawdzamy, czy w pamięci jest zapisany użytkownik
+    const storedUsername = localStorage.getItem('username');
+    if (storedUsername) {
+      setUsername(storedUsername);
+    }
+  }, []); // Pusta tablica oznacza, że to wywoła się tylko raz przy załadowaniu
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
@@ -24,12 +37,23 @@ export default function Navbar() {
     setIsMenuOpen(false);
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('username');
+
+    setUsername(null);
+    closeMenus();
+    
+    navigate('/');
+    
+    window.location.reload();
+  };
+
   return (
     <nav className="bg-green-500 fixed w-full z-20 top-0 border-b border-green-800 shadow-md">
       <div className="max-w-7xl flex flex-wrap items-center justify-between mx-auto p-4">
         
         <Link to="/" className="flex items-center space-x-3 rtl:space-x-reverse">
-        {/* tu będzie logo */}
           <p className="text-2xl font-bold">🍕</p> 
           <span className="self-center text-4xl font-semibold font-fancy whitespace-nowrap text-white">
             <i>Qui la Carne</i>
@@ -41,17 +65,19 @@ export default function Navbar() {
           <button
             onClick={toggleLanguage}
             type="button"
-            className="flex items-center justify-center w-10 h-10 mr-10 bg-green-700 text-white rounded-full hover:bg-green-800 transition-colors focus:ring-4 ring-2 ring-green-700 shadow-sm text-lg"
+            className="flex items-center justify-center w-10 h-10 bg-green-700 text-white rounded-full hover:bg-green-800 transition-colors focus:ring-4 ring-2 ring-green-700 shadow-sm text-lg"
             title={i18n.language?.startsWith('pl') ? 'Switch to English' : 'Zmień na polski'}
           >
-            {i18n.language?.startsWith('pl') ? 'PL' : 'GB'}
+            {i18n.language?.startsWith('pl') ? '🇵🇱' : '🇬🇧'}
           </button>
 
           <div className="relative hidden md:block">
             <button
               onClick={toggleUserDropdown}
               type="button"
-              className="flex text-sm bg-red-600 rounded-full w-10 h-10 items-center justify-center text-white ring-2 ring-red-00 hover:ring-white transition-all focus:ring-4 focus:ring-red-100"
+              className={`flex text-sm rounded-full w-10 h-10 items-center justify-center text-white ring-2 transition-all focus:ring-4 ${
+                username ? 'bg-green-800 ring-green-900 focus:ring-green-300 hover:ring-white' : 'bg-red-600 ring-red-800 focus:ring-red-100 hover:ring-white'
+              }`}
               aria-expanded={isUserDropdownOpen}
             >
               <span className="sr-only">{t('navbar.userMenu')}</span>
@@ -60,11 +86,29 @@ export default function Navbar() {
               </svg>
             </button>
 
-            <div className={`${isUserDropdownOpen ? 'block' : 'hidden'} absolute right-0 mt-3 z-50 w-40 text-base list-none bg-white rounded-2xl shadow-xl border border-gray-100 divide-y divide-gray-100 transform origin-top-right transition-all`}>
+            <div className={`${isUserDropdownOpen ? 'block' : 'hidden'} absolute right-0 mt-3 z-50 w-48 text-base list-none bg-white rounded-2xl shadow-xl border border-gray-100 divide-y divide-gray-100 transform origin-top-right transition-all`}>
               <ul className="py-2 px-1.5">
-                <li><Link to="/login" onClick={closeMenus} className="block px-4 py-2 text-sm text-gray-700 rounded-xl hover:bg-green-50 hover:text-green-700">{t('navbar.login')}</Link></li>
-                <li><Link to="/register" onClick={closeMenus} className="block px-4 py-2 text-sm text-gray-700 rounded-xl hover:bg-green-50 hover:text-green-700">{t('navbar.register')}</Link></li>
-                <li><Link to="/settings" onClick={closeMenus} className="block px-4 py-2 text-sm text-gray-700 rounded-xl hover:bg-gray-100">{t('navbar.settings')}</Link></li>
+
+                {username ? (
+                  <>
+                    <li className="block px-4 py-3 text-sm text-gray-900 font-bold border-b border-gray-100 mb-1 truncate">
+                      {t('navbar.hello')}, <span className="text-green-600">{username}</span>!
+                    </li>
+                    <li><Link to="/settings" onClick={closeMenus} className="block px-4 py-2 text-sm text-gray-700 rounded-xl hover:bg-gray-100">{t('navbar.settings')}</Link></li>
+                    <li>
+                      <button onClick={handleLogout} className="w-full text-left block px-4 py-2 text-sm text-red-600 font-bold rounded-xl hover:bg-red-50 transition-colors mt-1">
+                        {t('navbar.logout')}
+                      </button>
+                    </li>
+                  </>
+                ) : (
+                  <>
+                    <li><Link to="/login" onClick={closeMenus} className="block px-4 py-2 text-sm text-gray-700 rounded-xl hover:bg-green-50 hover:text-green-700">{t('navbar.login')}</Link></li>
+                    <li><Link to="/register" onClick={closeMenus} className="block px-4 py-2 text-sm text-gray-700 rounded-xl hover:bg-green-50 hover:text-green-700">{t('navbar.register')}</Link></li>
+                    <li><Link to="/settings" onClick={closeMenus} className="block px-4 py-2 text-sm text-gray-700 rounded-xl hover:bg-gray-100">{t('navbar.settings')}</Link></li>
+                  </>
+                )}
+
               </ul>
             </div>
           </div>
@@ -89,8 +133,20 @@ export default function Navbar() {
             <li><Link to="/menu" className="block py-2 px-4 text-center text-white rounded-2xl hover:bg-green-800 transition-colors">{t('navbar.menu')}</Link></li>
             <li><Link to="/reservation" className="block py-2 px-4 text-center text-white rounded-2xl hover:bg-green-800 transition-colors">{t('navbar.reservation')}</Link></li>
             <li><Link to="/about" className="block py-2 px-4 text-center text-white rounded-2xl hover:bg-green-800 transition-colors">{t('navbar.about')}</Link></li>
-            <li className='md:hidden border-t border-green-500 pt-2 w-full mt-1'><Link to="/login" className="block py-2 px-4 text-center text-white rounded-2xl hover:bg-green-800 transition-colors">{t('navbar.login')}</Link></li>
-            <li className='md:hidden border-green-500 w-full'><Link to="/register" className="block py-2 px-4 text-center text-white rounded-2xl hover:bg-green-800 transition-colors">{t('navbar.register')}</Link></li>
+
+            {username ? (
+              <li className='md:hidden border-t border-green-500 pt-2 w-full mt-1'>
+                <button onClick={handleLogout} className="w-full block py-2 px-4 text-center text-red-200 font-bold rounded-2xl hover:bg-green-800 transition-colors">
+                  {t('navbar.logout')} ({username})
+                </button>
+              </li>
+            ) : (
+              <>
+                <li className='md:hidden border-t border-green-500 pt-2 w-full mt-1'><Link to="/login" className="block py-2 px-4 text-center text-white rounded-2xl hover:bg-green-800 transition-colors">{t('navbar.login')}</Link></li>
+                <li className='md:hidden border-green-500 w-full'><Link to="/register" className="block py-2 px-4 text-center text-white rounded-2xl hover:bg-green-800 transition-colors">{t('navbar.register')}</Link></li>
+              </>
+            )}
+
           </ul>
         </div>
         
