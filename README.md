@@ -33,9 +33,10 @@ Zainstaluj:
    ```bash
    git clone https://github.com/Kruk43854/web-ZMP-restauracja
    cd <nazwa-folderu>
-   Zainstaluj zależności:
 
-Bash
+
+   Zainstaluj zależności:
+ ```bash
 npm install
 Utwórz plik .env w głównym katalogu projektu i zdefiniuj adres API (jeśli nie używasz wbudowanego proxy Vite):
 
