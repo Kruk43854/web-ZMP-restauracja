@@ -74,5 +74,27 @@
       "invalidCredentials": "Nieprawidłowy login lub hasło.",
       "serverError": "Błąd połączenia z serwerem. Spróbuj ponownie później."
     }
+  },
+  "register": {
+    "title": "Rejestracja",
+    "subtitle": "Dołącz do najlepszej włoskiej restauracji w Polsce!",
+    "usernamePlaceholder": "Nazwa użytkownika",
+    "emailPlaceholder": "Adres e-mail",
+    "passwordPlaceholder": "Hasło",
+    "confirm_password_placeholder": "Potwierdź hasło",
+    "submitBtn": "Zarejestruj się",
+    "loading": "Tworzenie konta...",
+    "or": "LUB",
+    "fbBtn": "Zarejestruj przez Facebook",
+    "googleBtn": "Zarejestruj przez Google",
+    "comingSoon": "Wkrótce dostępne!",
+    "hasAccount": "Masz już konto?",
+    "loginLink": "Zaloguj się",
+    "error_username_required": "Nazwa użytkownika jest wymagana.",
+    "error_password_mismatch": "Hasła nie są identyczne.",
+    "error_password_short": "Hasło musi mieć co najmniej 6 znaków.",
+    "error_creation_failed": "Nie udało się utworzyć konta.",
+    "success_message": "Rejestracja zakończona sukcesem!",
+    "connection_error": "Błąd połączenia z serwerem. Spróbuj ponownie później."
   }
 }

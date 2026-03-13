@@ -74,5 +74,27 @@
       "invalidCredentials": "Invalid username or password.",
       "serverError": "Connection error. Please try again later."
     }
+  },
+  "register": {
+    "title": "Register",
+    "subtitle": "Join the best Italian restaurant in Poland!",
+    "usernamePlaceholder": "Username",
+    "emailPlaceholder": "Email",
+    "passwordPlaceholder": "Password",
+    "confirm_password_placeholder": "Confirm Password",
+    "submitBtn": "Register",
+    "loading": "Creating account...",
+    "or": "OR",
+    "fbBtn": "Register with Facebook",
+    "googleBtn": "Register with Google",
+    "comingSoon": "Coming soon!",
+    "hasAccount": "Already have an account?",
+    "loginLink": "Log in",
+    "error_username_required": "Username is required.",
+    "error_password_mismatch": "Passwords do not match.",
+    "error_password_short": "Password must be at least 6 characters long.",
+    "error_creation_failed": "Failed to create account.",
+    "success_message": "Registration successful!",
+    "connection_error": "Connection error. Please try again later."
   }
 }
