@@ -2,7 +2,7 @@
 
 Aplikacja webowa dla włoskiej restauracji "Qui la Carne".
 
-## 🛠 Technologie
+##  Technologie
 
 Projekt opiera się na:
 
