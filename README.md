@@ -32,17 +32,15 @@ Zainstaluj:
 1. Sklonuj repozytorium:
    ```bash
    git clone https://github.com/Kruk43854/web-ZMP-restauracja
-
 ```
+
    Zainstaluj zależności:
  ```bash
 npm install
-Utwórz plik .env w głównym katalogu projektu i zdefiniuj adres API (jeśli nie używasz wbudowanego proxy Vite):
-
-Fragment kodu
-VITE_API_URL=http://localhost:8080
+```
 Uruchom serwer deweloperski:
 
-Bash
+```bash
 npm run dev
-Aplikacja będzie dostępna pod adresem: http://localhost:5173.
+```
+Aplikacja będzie dostępna pod adresem: `http://localhost:5173`.
