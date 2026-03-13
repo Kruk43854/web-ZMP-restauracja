@@ -7,7 +7,9 @@
     "register": "Register",
     "settings": "Settings",
     "userMenu": "User Menu",
-    "openMenu": "Open main menu"
+    "openMenu": "Open main menu",
+    "hello": "Hello",
+    "logout": "Log out"
     },
   "home": {
     "hero": {
@@ -52,6 +54,25 @@
         "name": "Pasta al Tartufo",
         "desc": "Handmade tagliatelle pasta enveloped in a velvety black truffle sauce and parmesan."
       }
+    }
+  },
+  "login": {
+    "title": "Login",
+    "subtitle": "The best Italian restaurant in Poland!",
+    "usernamePlaceholder": "Username",
+    "passwordPlaceholder": "Password",
+    "submitBtn": "Sign In",
+    "loading": "Signing in...",
+    "or": "OR",
+    "fbBtn": "Sign in with Facebook",
+    "googleBtn": "Sign in with Google",
+    "comingSoon": "Coming soon!",
+    "forgotPassword": "Forgot password?",
+    "noAccount": "Don't have an account?",
+    "registerLink": "Sign up",
+    "errors": {
+      "invalidCredentials": "Invalid username or password.",
+      "serverError": "Connection error. Please try again later."
     }
   }
 }

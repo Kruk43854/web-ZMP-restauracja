@@ -7,7 +7,9 @@
     "register": "Rejestracja",
     "settings": "Ustawienia",
     "userMenu": "Menu użytkownika",
-    "openMenu": "Otwórz menu"
+    "openMenu": "Otwórz menu",
+    "hello": "Witaj",
+    "logout": "Wyloguj się"
   },
   "home": {
     "hero": {
@@ -52,6 +54,25 @@
         "name": "Pasta al Tartufo",
         "desc": "Ręcznie robiony makaron tagliatelle otulony aksamitnym sosem z czarnej trufli i parmezanem."
       }
+    }
+  },
+  "login": {
+    "title": "Logowanie",
+    "subtitle": "Najlepsza włoska restauracja w Polsce!",
+    "usernamePlaceholder": "Nazwa użytkownika",
+    "passwordPlaceholder": "Hasło",
+    "submitBtn": "Zaloguj się",
+    "loading": "Logowanie...",
+    "or": "LUB",
+    "fbBtn": "Zaloguj przez Facebook",
+    "googleBtn": "Zaloguj przez Google",
+    "comingSoon": "Wkrótce dostępne!",
+    "forgotPassword": "Zapomniałeś hasła?",
+    "noAccount": "Nie masz konta?",
+    "registerLink": "Zarejestruj się",
+    "errors": {
+      "invalidCredentials": "Nieprawidłowy login lub hasło.",
+      "serverError": "Błąd połączenia z serwerem. Spróbuj ponownie później."
     }
   }
 }
