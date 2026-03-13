@@ -32,9 +32,8 @@ Zainstaluj:
 1. Sklonuj repozytorium:
    ```bash
    git clone https://github.com/Kruk43854/web-ZMP-restauracja
-   cd <nazwa-folderu>
 
-
+```
    Zainstaluj zależności:
  ```bash
 npm install
