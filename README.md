@@ -1,89 +1,48 @@
-<<<<<<< HEAD
-# Welcome to React Router!
+#  Qui la Carne - Frontend
 
-A modern, production-ready template for building full-stack React applications using React Router.
+Aplikacja webowa dla włoskiej restauracji "Qui la Carne".
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/remix-run/react-router-templates/tree/main/default)
+## 🛠 Technologie
 
-## Features
+Projekt opiera się na:
 
-- 🚀 Server-side rendering
-- ⚡️ Hot Module Replacement (HMR)
-- 📦 Asset bundling and optimization
-- 🔄 Data loading and mutations
-- 🔒 TypeScript by default
-- 🎉 TailwindCSS for styling
-- 📖 [React Router docs](https://reactrouter.com/)
+* **Framework:** React + React Router v7
+* **Build Tool:** Vite
+* **Język:** TypeScript
+* **Style:** Tailwind CSS
+* **Tłumaczenia (i18n):** `react-i18next`
+* **Komunikacja z API:** natywny `fetch` API
 
-## Getting Started
+## ✨ Główne funkcjonalności
 
-### Installation
+* **Internacjonalizacja (i18n):** Pełne wsparcie dla języka polskiego i angielskiego ze zmianą w locie z poziomu nawigacji.
+* **Autoryzacja (JWT):** Rejestracja i logowanie użytkowników, obsługa błędów z serwera, zapisywanie tokenów w `localStorage`.
+* **Dynamiczny Routing:** Płynne przechodzenie między widokami bez przeładowywania strony (React Router).
+* **Responsywny UI:** W pełni dopasowany do urządzeń mobilnych układ (Tailwind CSS).
 
-Install the dependencies:
+## 🚀 Uruchomienie projektu lokalnie
 
-```bash
+### Wymagania wstępne
+Zainstaluj:
+* [Node.js](https://nodejs.org/) (wersja 18+ zalecana)
+* Menadżer pakietów npm (instalowany razem z Node.js)
+
+### Instalacja i uruchomienie
+
+1. Sklonuj repozytorium:
+   ```bash
+   git clone https://github.com/Kruk43854/web-ZMP-restauracja
+   cd <nazwa-folderu>
+   Zainstaluj zależności:
+
+Bash
 npm install
-```
+Utwórz plik .env w głównym katalogu projektu i zdefiniuj adres API (jeśli nie używasz wbudowanego proxy Vite):
 
-### Development
+Fragment kodu
+VITE_API_URL=http://localhost:8080
+Uruchom serwer deweloperski:
 
-Start the development server with HMR:
-
-```bash
+Bash
 npm run dev
-```
-
-Your application will be available at `http://localhost:5173`.
-
-## Building for Production
-
-Create a production build:
-
-```bash
-npm run build
-```
-
-## Deployment
-
-### Docker Deployment
-
-To build and run using Docker:
-
-```bash
-docker build -t my-app .
-
-# Run the container
-docker run -p 3000:3000 my-app
-```
-
-The containerized application can be deployed to any platform that supports Docker, including:
-
-- AWS ECS
-- Google Cloud Run
-- Azure Container Apps
-- Digital Ocean App Platform
-- Fly.io
-- Railway
-
-### DIY Deployment
-
-If you're familiar with deploying Node applications, the built-in app server is production-ready.
-
-Make sure to deploy the output of `npm run build`
-
-```
-├── package.json
-├── package-lock.json (or pnpm-lock.yaml, or bun.lockb)
-├── build/
-│   ├── client/    # Static assets
-│   └── server/    # Server-side code
-```
-
-## Styling
-
-This template comes with [Tailwind CSS](https://tailwindcss.com/) already configured for a simple default starting experience. You can use whatever CSS framework you prefer.
-
----
-
-Built with ❤️ using React Router.
-=======
+Aplikacja będzie dostępna pod adresem: http://localhost:5173.
