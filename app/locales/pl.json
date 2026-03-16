@@ -96,5 +96,52 @@
     "error_creation_failed": "Nie udało się utworzyć konta.",
     "success_message": "Rejestracja zakończona sukcesem!",
     "connection_error": "Błąd połączenia z serwerem. Spróbuj ponownie później."
+  },
+  "forgotPassword": {
+    "title": "Zresetuj hasło",
+    "description": "Podaj swój adres e-mail, a wyślemy Ci link do zresetowania hasła.",
+    "email_placeholder": "Adres e-mail",
+    "submit": "Wyślij link resetujący",
+    "sending": "Wysyłanie...",
+    "remember_password": "Pamiętasz hasło?",
+    "back_to_login": "Wróć do logowania",
+    "error_email_required": "Adres e-mail jest wymagany.",
+    "error_sending_failed": "Nie udało się wysłać linku resetującego.",
+    "success_message": "Jeśli to konto istnieje, wysłano na nie link resetujący.",
+    "connection_error": "Błąd połączenia. Spróbuj ponownie."
+  },
+  "confirmEmail": {
+    "title": "Weryfikacja e-mail",
+    "loading_title": "Weryfikacja w toku",
+    "loading_desc": "Proszę czekać, sprawdzamy Twój token...",
+    "error_title": "Błąd weryfikacji",
+    "success_title": "Sukces!",
+    "back_to_login": "Wróć do logowania",
+    "go_to_login": "Przejdź do logowania",
+    "verifying_initial": "Sprawdzanie...",
+    "error_invalid_link": "Nieprawidłowy lub uszkodzony link weryfikacyjny.",
+    "error_default": "Nie udało się potwierdzić adresu e-mail.",
+    "error_already_confirmed": "Twój e-mail został już potwierdzony. Możesz się zalogować.",
+    "success_message": "Twój adres e-mail został pomyślnie potwierdzony!",
+    "connection_error": "Błąd połączenia. Spróbuj ponownie."
+  },
+  "resetPassword": {
+    "title": "Nowe hasło",
+    "description": "Wpisz poniżej swoje nowe hasło.",
+    "account_label": "Konto",
+    "new_password_placeholder": "Nowe hasło",
+    "confirm_password_placeholder": "Potwierdź nowe hasło",
+    "submit": "Zapisz hasło",
+    "saving": "Zapisywanie...",
+    "remember_password": "Pamiętasz hasło?",
+    "back_to_login": "Zaloguj się",
+    "success_button": "Przejdź do logowania",
+    "error_missing_token_link": "Brakujący lub uszkodzony link resetujący.",
+    "error_missing_token_submit": "Nie można zresetować hasła (brak tokenu).",
+    "error_password_mismatch": "Hasła nie są identyczne.",
+    "error_password_short": "Hasło musi mieć co najmniej 6 znaków.",
+    "error_setting_failed": "Nie udało się zmienić hasła. Link mógł wygasnąć.",
+    "success_message": "Hasło zostało pomyślnie zmienione!",
+    "connection_error": "Błąd połączenia. Spróbuj ponownie."
   }
 }
