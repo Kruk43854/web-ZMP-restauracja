@@ -143,5 +143,46 @@
     "error_setting_failed": "Nie udało się zmienić hasła. Link mógł wygasnąć.",
     "success_message": "Hasło zostało pomyślnie zmienione!",
     "connection_error": "Błąd połączenia. Spróbuj ponownie."
+  },
+  "settings": {
+    "tabs.profile": "Profil",
+    "tabs.security": "Bezpieczeństwo",
+    "title": "Ustawienia",
+    "back_to_home": "Wróć na stronę główną",
+    "save": "Zapisz",
+    "error_generic": "Wystąpił błąd. Spróbuj ponownie.",
+    "connection_error": "Błąd połączenia z serwerem.",
+    "unauthorized": "Sesja wygasła. Zaloguj się ponownie.",
+    "profile": {
+      "heading": "Twoje dane",
+      "username": "Nazwa użytkownika",
+      "success_username": "Zaktualizowano nazwę!",
+      "new_email": "Nowy e-mail",
+      "send_email_link": "Wyślij link weryfikacyjny",
+      "success_email_link": "Link wysłany na nowy adres!"
+    },
+    "security": {
+      "heading": "Zarządzanie hasłem i kontem",
+      "current_password": "Obecne hasło",
+      "new_password": "Nowe hasło",
+      "confirm_password": "Potwierdź nowe hasło",
+      "change_password_btn": "Zmień hasło",
+      "error_mismatch": "Nowe hasła nie są identyczne.",
+      "success_password": "Hasło zostało zmienione!",
+      "danger_zone": "Strefa niebezpieczna",
+      "danger_desc": "Usunięcie konta jest nieodwracalne.",
+      "delete_account": "Usuń moje konto",
+      "delete_confirm_prompt": "Czy na pewno chcesz usunąć konto? Ta akcja jest nieodwracalna."
+    }
+  },
+  "confirmEmailChange": {
+    "loading_title": "Weryfikacja...",
+    "error_title": "Błąd weryfikacji",
+    "success_title": "Sukces!",
+    "back_to_settings": "Wróć do ustawień",
+    "error_invalid_link": "Link jest uszkodzony lub wygasł.",
+    "error_default": "Nie udało się zmienić e-maila.",
+    "success_message": "Twój adres e-mail został pomyślnie zmieniony!",
+    "connection_error": "Błąd połączenia. Spróbuj ponownie."
   }
 }

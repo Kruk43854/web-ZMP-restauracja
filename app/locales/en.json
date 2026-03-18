@@ -143,5 +143,46 @@
     "error_setting_failed": "Failed to change password. The link may have expired.",
     "success_message": "Password has been successfully changed!",
      "connection_error": "Connection error. Please try again later." 
+  },
+  "settings": {
+    "tabs.profile": "Profile",
+    "tabs.security": "Security",
+    "title": "Settings",
+    "back_to_home": "Back to Home",
+    "save": "Save",
+    "error_generic": "An error occurred. Please try again.",
+    "connection_error": "Connection error. Please try again later.",
+    "unauthorized": "Session expired. Please log in again.",
+    "profile": {
+      "heading": "Your Information",
+      "username": "Username",
+      "success_username": "Username updated!",
+      "new_email": "New Email",
+      "send_email_link": "Send Verification Link",
+      "success_email_link": "Link sent to new address!"
+    },
+    "security": {
+      "heading": "Password and Account Management",
+      "current_password": "Current Password",
+      "new_password": "New Password",
+      "confirm_password": "Confirm New Password",
+      "change_password_btn": "Change Password",
+      "error_mismatch": "New passwords do not match.",
+      "success_password": "Password has been changed!",
+      "danger_zone": "Danger Zone",
+      "danger_desc": "Deleting your account is irreversible.",
+      "delete_account": "Delete My Account",
+      "delete_confirm_prompt": "Are you sure you want to delete your account? This action is irreversible."
+    }
+  },
+  "confirmEmailChange": {
+    "loading_title": "Verification in Progress",
+    "error_title": "Verification Error",
+    "success_title": "Success!",
+    "back_to_settings": "Back to Settings",
+    "error_invalid_link": "The link is invalid or has expired.",
+    "error_default": "Failed to change email address.",
+    "success_message": "Your email address has been successfully changed!",
+    "connection_error": "Connection error. Please try again later."
   }
 }
