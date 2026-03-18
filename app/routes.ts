@@ -9,6 +9,8 @@ export default [
     route("register", "routes/register.tsx"),
     route("forgot-password", "routes/forgot-password.tsx"),
     route("confirmation", "routes/confirm-email.tsx"),
+    route("confirm-email-change", "routes/confirm-email-change.tsx"),
     route("reset-password", "routes/reset-password.tsx"),
+    route("settings", "routes/settings.tsx"),
 
     ] satisfies RouteConfig;
