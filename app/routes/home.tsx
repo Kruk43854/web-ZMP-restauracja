@@ -1,15 +1,16 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { Route } from "./+types/home";
 import { Link } from "react-router";
 import { useTranslation } from "react-i18next";
 
-export function meta({}: Route.MetaArgs) {
-  return [{ title: "Qui la Carne" }];
-}
 
 export default function CarouselSection() {
   const { t } = useTranslation();
   const [currentIndex, setCurrentIndex] = useState(0);
+  
+      useEffect(() => {
+      document.title = "Qui la Carne";
+    }, [t]);
 
   const bestsellers = [
     {

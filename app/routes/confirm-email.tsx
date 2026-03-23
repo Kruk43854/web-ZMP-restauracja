@@ -2,9 +2,6 @@ import { useState, useEffect, useRef } from "react";
 import { Link, useSearchParams } from "react-router";
 import { useTranslation } from "react-i18next";
 
-export function meta() {
-  return [{ title: "Potwierdź e-mail - Qui la Carne" }];
-}
 
 export default function ConfirmEmail() {
   const { t } = useTranslation();
@@ -13,6 +10,10 @@ export default function ConfirmEmail() {
   const [status, setStatus] = useState<"loading" | "success" | "error">("loading");
   const [message, setMessage] = useState("");
   const effectRan = useRef(false);
+
+  useEffect(() => {
+    document.title = t("confirmEmail.title") + " - Qui la Carne";
+  }, [t]);
 
   useEffect(() => {
     if (status === "loading") {

@@ -1,10 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router";
 import { useTranslation } from "react-i18next"; 
 
-export function meta() {
-  return [{ title: "Rejestracja - Qui la Carne" }]; 
-}
+
 
 export default function Register() {
   const { t } = useTranslation();
@@ -16,6 +14,10 @@ export default function Register() {
   const [error, setError] = useState("");
   const [isSuccess, setSuccess] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+
+      useEffect(() => {
+      document.title = t("register.title") + " - Qui la Carne";
+    }, [t]);
   
   const navigate = useNavigate();
 

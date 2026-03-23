@@ -1,10 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router";
 import { useTranslation } from "react-i18next";
 
-export function meta() {
-  return [{ title: "Zapomniałem hasła - Qui la Carne" }];
-}
 
 export default function ForgotPassword() {
   const { t } = useTranslation();
@@ -12,6 +9,10 @@ export default function ForgotPassword() {
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+
+    useEffect(() => {
+    document.title = t("forgotPassword.title") + " - Qui la Carne";
+  }, [t]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();

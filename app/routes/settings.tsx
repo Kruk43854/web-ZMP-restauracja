@@ -2,9 +2,6 @@ import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Link, useNavigate } from "react-router";
 
-export function meta() {
-  return [{ title: "Ustawienia Konta - Qui la Carne" }];
-}
 
 export default function Settings() {
   const { t } = useTranslation();

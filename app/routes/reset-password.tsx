@@ -2,9 +2,7 @@ import { useState, useEffect } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router";
 import { useTranslation } from "react-i18next";
 
-export function meta() {
-  return [{ title: "Resetuj hasło - Qui la Carne" }];
-}
+
 
 export default function ResetPassword() {
   const { t } = useTranslation();
@@ -17,6 +15,11 @@ export default function ResetPassword() {
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+
+
+    useEffect(() => {
+    document.title = t("resetPassword.title") + " - Qui la Carne";
+  }, [t]);
 
   useEffect(() => {
     const emailParam = searchParams.get("email");

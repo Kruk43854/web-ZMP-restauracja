@@ -1,10 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router";
 import { useTranslation } from "react-i18next"; 
 
-export function meta() {
-  return [{ title: "Logowanie - Qui la Carne" }]; 
-}
 
 export default function Login() {
   const { t } = useTranslation();
@@ -15,6 +12,10 @@ export default function Login() {
   const [isLoading, setIsLoading] = useState(false);
   
   const navigate = useNavigate();
+
+      useEffect(() => {
+      document.title = t("login.title") + " - Qui la Carne";
+    }, [t]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
