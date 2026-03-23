@@ -8,18 +8,16 @@ export default function Navbar() {
   const { t } = useTranslation();
   const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
   
-  // NOWE: Stan przechowujący nazwę zalogowanego użytkownika
   const [username, setUsername] = useState<string | null>(null);
   const navigate = useNavigate();
 
-  // NOWE: Hook sprawdzający LocalStorage przy każdym renderowaniu Navbara
+
   useEffect(() => {
-    // Sprawdzamy, czy w pamięci jest zapisany użytkownik
     const storedUsername = localStorage.getItem('username');
     if (storedUsername) {
       setUsername(storedUsername);
     }
-  }, []); // Pusta tablica oznacza, że to wywoła się tylko raz przy załadowaniu
+  }, []); 
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
