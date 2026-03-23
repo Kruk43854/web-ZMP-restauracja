@@ -13,25 +13,26 @@ export default function Settings() {
   const [activeTab, setActiveTab] = useState<"profile" | "security">("profile");
   const token = typeof window !== 'undefined' ? localStorage.getItem("token") : null;
 
-  // --- STANY: PROFIL (NAZWA) ---
   const [username, setUsername] = useState("");
   const [profileMsg, setProfileMsg] = useState("");
   const [isProfileSuccess, setIsProfileSuccess] = useState(false);
   const [isProfileLoading, setIsProfileLoading] = useState(false);
 
-  // --- STANY: PROFIL (EMAIL) ---
   const [email, setEmail] = useState("");
   const [emailMsg, setEmailMsg] = useState("");
   const [isEmailSuccess, setIsEmailSuccess] = useState(false);
   const [isEmailLoading, setIsEmailLoading] = useState(false);
 
-  // --- STANY: BEZPIECZEŃSTWO (HASŁO) ---
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [securityMsg, setSecurityMsg] = useState("");
   const [isSecuritySuccess, setIsSecuritySuccess] = useState(false);
   const [isSecurityLoading, setIsSecurityLoading] = useState(false);
+
+    useEffect(() => {
+    document.title = t("settings.title") + " - Qui la Carne";
+  }, [t]);
 
   useEffect(() => {
     const storedUsername = localStorage.getItem("username");
