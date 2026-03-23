@@ -2,9 +2,6 @@ import { useState, useEffect, useRef } from "react";
 import { Link, useSearchParams } from "react-router";
 import { useTranslation } from "react-i18next";
 
-// export function meta() {
-//   return [{ title: "Potwierdź zmianę e-mail - Qui la Carne" }];
-// }
 
 export default function ConfirmEmailChange() {
   const { t } = useTranslation();
