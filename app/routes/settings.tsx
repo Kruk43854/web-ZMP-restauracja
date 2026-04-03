@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
+import { useAuth } from "../contexts/AuthContext";
 import { Link, useNavigate } from "react-router";
 
 
@@ -8,7 +9,7 @@ export default function Settings() {
   const navigate = useNavigate();
   
   const [activeTab, setActiveTab] = useState<"profile" | "security">("profile");
-  const token = typeof window !== 'undefined' ? localStorage.getItem("token") : null;
+  const { token, updateUsername, logout } = useAuth();
 
   const [username, setUsername] = useState("");
   const [profileMsg, setProfileMsg] = useState("");
@@ -58,8 +59,7 @@ export default function Settings() {
 
       setIsProfileSuccess(true);
       setProfileMsg(data?.message ?? t("settings.profile.success_username"));
-      localStorage.setItem("username", username);
-      setTimeout(() => window.location.reload(), 1500);
+      updateUsername(username);
     } catch {
       setProfileMsg(t("settings.connection_error"));
     } finally {

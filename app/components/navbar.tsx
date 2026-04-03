@@ -1,23 +1,17 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react'; 
 import { Link, useNavigate } from 'react-router';
 import { useTranslation } from 'react-i18next'; 
+import { useAuth } from "../contexts/AuthContext";
 import i18n from '../i18n';
 
 export default function Navbar() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { t } = useTranslation();
-  const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
-  
-  const [username, setUsername] = useState<string | null>(null);
   const navigate = useNavigate();
 
-
-  useEffect(() => {
-    const storedUsername = localStorage.getItem('username');
-    if (storedUsername) {
-      setUsername(storedUsername);
-    }
-  }, []); 
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
+  
+  const { username, logout } = useAuth(); 
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
@@ -36,15 +30,9 @@ export default function Navbar() {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('username');
-
-    setUsername(null);
+    logout(); 
     closeMenus();
-    
     navigate('/');
-    
-    window.location.reload();
   };
 
   return (
@@ -52,6 +40,7 @@ export default function Navbar() {
       <div className="max-w-7xl flex flex-wrap items-center justify-between mx-auto p-4">
         
         <Link to="/" className="flex items-center space-x-3 rtl:space-x-reverse">
+        {/* tu bedzie logo */}
           <p className="text-2xl font-bold">🍕</p> 
           <span className="self-center text-4xl font-semibold font-fancy whitespace-nowrap text-white">
             <i>Qui la Carne</i>

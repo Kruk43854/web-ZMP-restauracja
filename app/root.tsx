@@ -1,5 +1,6 @@
 import { Links, Meta, Outlet, Scripts, ScrollRestoration } from "react-router";
 import Navbar from "./components/navbar"; 
+import { AuthProvider } from "./contexts/AuthContext"; 
 
 import appStylesHref from "./app.css?url";
 
@@ -17,8 +18,10 @@ export default function App() {
         <Links />
       </head>
       <body>
-        <Navbar /> 
-        <Outlet />
+        <AuthProvider>
+          <Navbar /> 
+          <Outlet />
+        </AuthProvider>
         <ScrollRestoration />
         <Scripts />
       </body>

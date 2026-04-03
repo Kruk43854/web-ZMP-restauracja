@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router";
 import { useTranslation } from "react-i18next"; 
+import { useAuth } from "../contexts/AuthContext";
 
 
 export default function Login() {
   const { t } = useTranslation();
+  const { login } = useAuth()
   
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -35,8 +37,7 @@ export default function Login() {
       const data = await response.json();
 
       if (response.ok && data.success) {
-        localStorage.setItem("token", data.data.token);
-        localStorage.setItem("username", data.data.username);
+        login(data.data.token, data.data.username);
         navigate("/");
       } else {
         setError(data.message || t('login.errors.invalidCredentials'));
