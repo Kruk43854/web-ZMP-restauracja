@@ -184,5 +184,27 @@
     "error_default": "Nie udało się zmienić e-maila.",
     "success_message": "Twój adres e-mail został pomyślnie zmieniony!",
     "connection_error": "Błąd połączenia. Spróbuj ponownie."
+  },
+  "Reservation": "Rezerwacja - Qui la Carne",
+  "reservation": {
+    "title": "Rezerwacja",
+    "description": "Zarezerwuj stolik w Qui i ciesz się wyjątkowym doświadczeniem kulinarnym! Oferujemy łatwy i szybki system rezerwacji online, który pozwala Ci zarezerwować stolik w kilka chwil.",
+    "tableToken": "Token Stolika",
+    "tableTokenPlaceholder": "np. T-12345",
+    "startTime": "Czas rozpoczęcia",
+    "endTime": "Czas zakończenia",
+    "submitBtn": "Zarezerwuj teraz",
+    "loading": "Przetwarzanie...",
+    "error_generic": "Nie udało się utworzyć rezerwacji.",
+    "success_message": "Stolik został pomyślnie zarezerwowany!",
+    "connection_error": "Wystąpił błąd przy łączeniu z serwerem.",
+    "login_required_title": "Wymagane logowanie",
+    "login_required_desc": "Tylko zalogowani goście mogą rezerwować stoliki.",
+    "select_dates_first": "Wybierz najpierw czas rozpoczęcia i zakończenia, aby zobaczyć dostępne stoliki.",
+    "fetching_tables": "Szukanie dostępnych stolików...",
+    "no_tables": "Brak dostępnych stolików w wybranym przedziale czasowym.",
+    "choose_table": "-- Wybierz stolik z listy --",
+    "capacity": "Max osób",
+    "error_unauthorized": "Musisz być zalogowany, aby dokonać rezerwacji."
   }
 }

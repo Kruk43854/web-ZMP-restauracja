@@ -184,5 +184,27 @@
     "error_default": "Failed to change email address.",
     "success_message": "Your email address has been successfully changed!",
     "connection_error": "Connection error. Please try again later."
+  },
+  "Reservation": "Reservation - Qui la Carne",
+  "reservation": {
+    "title": "Reservation",
+    "description": "Book a table at Qui and enjoy a unique culinary experience! We offer a quick and easy online reservation system that allows you to book a table in moments.",
+    "tableToken": "Table Token",
+    "tableTokenPlaceholder": "e.g. T-12345",
+    "startTime": "Start Time",
+    "endTime": "End Time",
+    "submitBtn": "Book Now",
+    "loading": "Processing...",
+    "error_generic": "Failed to create reservation.",
+    "success_message": "Table successfully reserved!",
+    "connection_error": "An error occurred while connecting to the server.",
+    "login_required_title": "Login Required",
+    "login_required_desc": "Only logged-in guests can book tables.",
+    "select_dates_first": "Please select a start and end time to see available tables.",
+    "fetching_tables": "Searching for available tables...",
+    "no_tables": "No tables available for the selected timeframe.",
+    "choose_table": "-- Select a table --",
+    "capacity": "Capacity",
+    "error_unauthorized": "You must be logged in to make a reservation."
   }
 }
