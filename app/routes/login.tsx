@@ -2,11 +2,12 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router";
 import { useTranslation } from "react-i18next"; 
 import { useAuth } from "../contexts/AuthContext";
+import { GoogleLogin } from "@react-oauth/google";
 
 
 export default function Login() {
   const { t } = useTranslation();
-  const { login } = useAuth()
+  const { login } = useAuth();
   
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -15,9 +16,9 @@ export default function Login() {
   
   const navigate = useNavigate();
 
-      useEffect(() => {
-      document.title = t("login.title") + " - Qui la Carne";
-    }, [t]);
+  useEffect(() => {
+    document.title = t("login.title") + " - Qui la Carne";
+  }, [t]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -32,6 +33,35 @@ export default function Login() {
           "Accept": "application/json",
         },
         body: JSON.stringify({ username, password }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok && data.success) {
+        login(data.data.token, data.data.username);
+        navigate("/");
+      } else {
+        setError(data.message || t('login.errors.invalidCredentials'));
+      }
+    } catch (err) {
+      setError(t('login.errors.serverError'));
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleGoogleSuccess = async (credentialResponse: any) => {
+    setError("");
+    setIsLoading(true);
+
+    try {
+      const response = await fetch('/api/auth/google', {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json",
+        },
+        body: JSON.stringify({ token: credentialResponse.credential }),
       });
 
       const data = await response.json();
@@ -113,14 +143,18 @@ export default function Login() {
               <div className="flex-1 h-px bg-gray-300"></div>
             </div>
 
-            <div className="flex flex-col gap-3 opacity-50 relative group">
-              <div className="absolute -inset-2 bg-transparent z-10 cursor-not-allowed" title={t('login.comingSoon')}></div>
-              <button type="button" disabled className="w-full bg-[#1877F2] text-white font-semibold py-3 rounded-xl flex justify-center items-center gap-2">
-                {t('login.fbBtn')}
-              </button>
-              <button type="button" disabled className="w-full bg-white text-gray-700 border border-gray-300 font-semibold py-3 rounded-xl flex justify-center items-center gap-2">
-                {t('login.googleBtn')}
-              </button>
+            <div className="flex flex-col gap-3 relative group">
+          
+              <div className="flex justify-center w-full mt-1">
+                 <GoogleLogin
+                    onSuccess={handleGoogleSuccess}
+                    onError={() => setError(t('login.errors.googleFailed', 'Błąd połączenia z Google'))}
+                    useOneTap
+                    theme="outline"
+                    shape="pill"
+                    width="100%"
+                 />
+              </div>
             </div>
 
             <div className="mt-4 flex flex-col gap-3 text-center text-sm">
