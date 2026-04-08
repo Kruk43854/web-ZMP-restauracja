@@ -1,6 +1,7 @@
 import { Links, Meta, Outlet, Scripts, ScrollRestoration } from "react-router";
 import Navbar from "./components/navbar"; 
-import { AuthProvider } from "./contexts/AuthContext"; 
+import { AuthProvider } from "./contexts/AuthContext";
+import { GoogleOAuthProvider } from "@react-oauth/google";
 
 import appStylesHref from "./app.css?url";
 
@@ -9,6 +10,8 @@ export const links = () => [
 ];
 
 export default function App() {
+  const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+
   return (
     <html lang="pl">
       <head>
@@ -18,10 +21,12 @@ export default function App() {
         <Links />
       </head>
       <body>
-        <AuthProvider>
-          <Navbar /> 
-          <Outlet />
-        </AuthProvider>
+        <GoogleOAuthProvider clientId={googleClientId}>
+          <AuthProvider>
+            <Navbar /> 
+            <Outlet />
+          </AuthProvider>
+        </GoogleOAuthProvider>
         <ScrollRestoration />
         <Scripts />
       </body>
