@@ -38,7 +38,7 @@ export default function Login() {
       const data = await response.json();
 
       if (response.ok && data.success) {
-        login(data.data.token, data.data.username);
+      login(data.data.token, data.data.refreshToken, data.data.username);
         navigate("/");
       } else {
         setError(data.message || t('login.errors.invalidCredentials'));
@@ -67,7 +67,7 @@ export default function Login() {
       const data = await response.json();
 
       if (response.ok && data.success) {
-        login(data.data.token, data.data.username);
+      login(data.data.token, data.data.refreshToken, data.data.username);
         navigate("/");
       } else {
         setError(data.message || t('login.errors.invalidCredentials'));
