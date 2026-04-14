@@ -120,6 +120,7 @@ export default function Navbar() {
             <li><Link to="/menu" className="block py-2 px-4 text-center text-white rounded-2xl hover:bg-green-800 transition-colors">{t('navbar.menu')}</Link></li>
             <li><Link to="/reservation" className="block py-2 px-4 text-center text-white rounded-2xl hover:bg-green-800 transition-colors">{t('navbar.reservation')}</Link></li>
             <li><Link to="/about" className="block py-2 px-4 text-center text-white rounded-2xl hover:bg-green-800 transition-colors">{t('navbar.about')}</Link></li>
+            <li><Link to="/my-reservations" className="block py-2 px-4 text-center text-white rounded-2xl hover:bg-green-800 transition-colors">{t('navbar.myReservations')}</Link></li>
 
             {username ? (
               <li className='md:hidden border-t border-green-500 pt-2 w-full mt-1'>
