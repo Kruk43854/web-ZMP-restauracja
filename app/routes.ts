@@ -12,5 +12,6 @@ export default [
     route("confirm-email-change", "routes/confirm-email-change.tsx"),
     route("reset-password", "routes/reset-password.tsx"),
     route("settings", "routes/settings.tsx"),
+    route("my-reservations", "routes/my-reservations.tsx"),
 
     ] satisfies RouteConfig;
