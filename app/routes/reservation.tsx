@@ -4,7 +4,7 @@ import { Link } from "react-router";
 import { useTranslation } from "react-i18next";
 
 export default function Reservation() {
-    const { isAuthenticated, token } = useAuth();
+    const { isAuthenticated, authFetch } = useAuth();
     const { t, i18n } = useTranslation();
 
     const [startTime, setStartTime] = useState("");
@@ -44,12 +44,11 @@ export default function Reservation() {
                 endTime: endIso
             });
 
-            const response = await fetch(`/api/tables?${queryParams.toString()}`, {
+            const response = await authFetch(`/api/tables?${queryParams.toString()}`, {
                 method: "GET",
                 headers: {
                     "Accept": "application/json",
                     "Accept-Language": i18n.language, 
-                    ...(token && { Authorization: `Bearer ${token}` })
                 }
             });
 
@@ -74,7 +73,7 @@ export default function Reservation() {
         setError(null);
         setSuccessMsg(null);
 
-        if (!token) {
+        if (!authFetch) {
             setError(t("reservation.error_unauthorized"));
             return;
         }
@@ -82,12 +81,11 @@ export default function Reservation() {
         setIsLoading(true);
 
         try {
-            const response = await fetch("/api/reservations", {
+            const response = await authFetch("/api/reservations", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                     "Accept": "application/json",
-                    Authorization: `Bearer ${token}`,
                 },
                 body: JSON.stringify({
                     tableToken,
