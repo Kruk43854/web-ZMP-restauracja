@@ -18,6 +18,18 @@ export default function Reservation() {
     const [successMsg, setSuccessMsg] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(false);
 
+    const [menuItems, setMenuItems] = useState<any[]>([]);
+
+    interface CartItem {
+    dishToken: string;
+    name: string;
+    price: number; 
+    quantity: number;
+    note: string;
+  }
+
+  const [cart, setCart] = useState<CartItem[]>([]);
+
     useEffect(() => {
         document.title = t("navbar.reservation") + " - Qui la Carne";
     }, [t]);
@@ -68,6 +80,34 @@ export default function Reservation() {
         }
     };
 
+
+    const addToCart = (dish: any) => {
+    setCart(prev => {
+      const existing = prev.find(item => item.dishToken === dish.token);
+      if (existing) {
+        return prev.map(item => 
+          item.dishToken === dish.token ? { ...item, quantity: item.quantity + 1 } : item
+        );
+      }
+      return [...prev, { dishToken: dish.token, name: dish.name, price: dish.price, quantity: 1, note: "" }];
+    });
+  };
+
+  const updateQuantity = (token: string, delta: number) => {
+    setCart(prev => {
+      return prev.map(item => {
+        if (item.dishToken === token) {
+          return { ...item, quantity: item.quantity + delta };
+        }
+        return item;
+      }).filter(item => item.quantity > 0);
+    });
+  };
+
+  const updateNote = (token: string, note: string) => {
+    setCart(prev => prev.map(item => item.dishToken === token ? { ...item, note } : item));
+  };
+
     const handleReservation = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         setError(null);
@@ -91,8 +131,12 @@ export default function Reservation() {
                     tableToken,
                     startTime: new Date(startTime).toISOString(),
                     endTime: new Date(endTime).toISOString(),
-                    dishes: []
-                }),
+                    dishes: cart.map(item => ({
+                     dishToken: item.dishToken,
+                     quantity: item.quantity,
+                     note: item.note
+            }))
+        }),
             });
 
             let data: any = null;
@@ -121,6 +165,37 @@ export default function Reservation() {
             setIsLoading(false);
         }
     };
+
+      useEffect(() => {
+    const fetchMenu = async () => {
+      setIsLoading(true);
+      setError(null);
+      
+      try {
+        const response = await authFetch('/api/dishes?page=1&size=15', {
+          method: "GET",
+          headers: {
+            "Accept": "application/json",
+            "Accept-Language": i18n.language,
+          },
+        });
+
+        if (response.ok) {
+          const result = await response.json();
+          const items = result.data?.items || [];
+          setMenuItems(items); 
+        } else {
+          setError(`Odmowa dostępu (Kod: ${response.status}).`);
+        }
+      } catch (err) {
+        setError("Wystąpił błąd przy połączeniu z serwerem.");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchMenu();
+  }, [i18n.language, authFetch]);
 
     return (
        <main className="grow pt-16">
@@ -226,6 +301,62 @@ export default function Reservation() {
                                </option>
                             ))}
                           </select>
+                      )}
+                    </div>
+
+                    <div className="flex flex-col gap-2 mt-4 border-t border-gray-100 pt-4">
+                      <label className="text-sm font-bold text-gray-500 uppercase tracking-wider ml-1">
+                        {t('reservation.dishes', 'Dania')} ({t('reservation.optional', 'opcjonalnie')})
+                      </label>
+  
+                      <div className="max-h-48 overflow-y-auto border border-gray-200 rounded-xl p-2 bg-gray-50">
+                        {menuItems.length === 0 ? (
+                          <p className="text-xs text-center text-gray-400 py-4">Ładowanie menu...</p>
+                        ) : (
+                          menuItems.map(dish => (
+                            <div key={dish.token} className="flex justify-between items-center p-2 border-b border-gray-100 last:border-0 bg-white rounded-lg mb-1 shadow-sm transition hover:border-red-200">
+                              <div>
+                                <p className="font-bold text-sm text-gray-800">{dish.name}</p>
+                            
+                                <p className="text-xs text-gray-500">{dish.price ? (dish.price / 100).toFixed(2) : '0.00'} PLN</p>
+                              </div>
+                              <button 
+                                type="button" 
+                                onClick={() => addToCart(dish)} 
+                                className="bg-red-50 text-red-700 w-8 h-8 rounded-full flex items-center justify-center font-bold hover:bg-red-600 hover:text-white transition-colors"
+                              >
+                                +
+                              </button>
+                            </div>
+                          ))
+                        )}
+                      </div>
+
+                      {cart.length > 0 && (
+                        <div className="flex flex-col gap-3 mt-2 p-4 bg-red-50/50 rounded-xl border border-red-100">
+                          <h4 className="font-bold text-red-800 text-sm">Twój pre-order:</h4>
+                          
+                          {cart.map(item => (
+                            <div key={item.dishToken} className="flex flex-col gap-2 bg-white p-3 rounded-lg shadow-sm border border-red-50">
+                              <div className="flex justify-between items-center">
+                                <span className="font-bold text-sm text-gray-800">{item.name}</span>
+                                <div className="flex items-center gap-3 bg-gray-50 rounded-lg p-1">
+                                  <button type="button" onClick={() => updateQuantity(item.dishToken, -1)} className="w-6 h-6 bg-white shadow-sm rounded flex items-center justify-center font-bold text-gray-600 hover:text-red-600">-</button>
+                                  <span className="font-bold text-sm w-4 text-center">{item.quantity}</span>
+                                  <button type="button" onClick={() => updateQuantity(item.dishToken, 1)} className="w-6 h-6 bg-white shadow-sm rounded flex items-center justify-center font-bold text-gray-600 hover:text-green-600">+</button>
+                                </div>
+                              </div>
+                              
+                              <input 
+                                type="text" 
+                                placeholder={t('reservation.notePlaceholder', 'Notatka dla kucharza (np. bez cebuli)')} 
+                                value={item.note}
+                                onChange={(e) => updateNote(item.dishToken, e.target.value)}
+                                className="text-xs p-2 border border-gray-200 rounded-lg bg-gray-50 outline-none focus:border-red-300 focus:bg-white transition-colors w-full"
+                              />
+                            </div>
+                          ))}
+                        </div>
                       )}
                     </div>
 
