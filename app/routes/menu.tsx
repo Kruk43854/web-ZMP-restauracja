@@ -79,7 +79,7 @@ export default function Menu() {
         </div>
       </header>
 
-      <section className="container mx-auto p-4 max-w-7xl -mt-8 relative z-20 mb-16">
+      <section className="container mx-auto p-4 max-w-7xl -mt-8 relative mb-16">
         {isLoading ? (
           <div className="flex justify-center py-20"><div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-red-700"></div></div>
         ) : error ? (
@@ -110,10 +110,10 @@ export default function Menu() {
                          />
                       </div>
                       
-                      <div className="p-6 flex flex-col flex-grow">
+                      <div className="p-6 flex flex-col grow">
                         <h3 className="text-2xl font-bold font-fancy text-gray-800 mb-2">{dish.name}</h3>
                         
-                        <p className="text-gray-500 text-sm mb-6 flex-grow">
+                        <p className="text-gray-500 text-sm mb-6 grow">
                           {dish.ingredients && dish.ingredients.length > 0 
                             ? dish.ingredients.map((ing: any) => ing.name || ing).join(', ')
                             : <span className="italic opacity-50">Brak dokładnego opisu</span>
