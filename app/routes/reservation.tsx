@@ -7,8 +7,9 @@ export default function Reservation() {
     const { isAuthenticated, authFetch } = useAuth();
     const { t, i18n } = useTranslation();
 
-    const [startTime, setStartTime] = useState("");
-    const [endTime, setEndTime] = useState("");
+    const [reservationDate, setReservationDate] = useState("");
+    const [startHour, setStartHour] = useState("");
+    const [endHour, setEndHour] = useState("");
     const [tableToken, setTableToken] = useState("");
 
     const [tables, setTables] = useState<any[]>([]);
@@ -35,9 +36,9 @@ export default function Reservation() {
     }, [t]);
 
     useEffect(() => {
-        if (startTime && endTime) {
-            const start = new Date(startTime);
-            const end = new Date(endTime);
+        if (reservationDate && startHour && endHour) {
+            const start = new Date(`${reservationDate}T${startHour}:00`);
+            const end = new Date(`${reservationDate}T${endHour}:00`);
             
             if (!isNaN(start.getTime()) && !isNaN(end.getTime()) && start < end) {
                 fetchAvailableTables(start.toISOString(), end.toISOString());
@@ -46,7 +47,7 @@ export default function Reservation() {
                 setTableToken("");
             }
         }
-    }, [startTime, endTime, i18n.language]);
+    }, [reservationDate, startHour, endHour, i18n.language]);
 
     const fetchAvailableTables = async (startIso: string, endIso: string) => {
         setIsFetchingTables(true);
@@ -64,10 +65,11 @@ export default function Reservation() {
                 }
             });
 
-            const data = await response.json().catch(() => null);
+    const data = await response.json().catch(() => null);
 
             if (response.ok && data?.success) {
-                setTables(data.data || []);
+                const tablesArray = data.data?.tables || data.data?.items || (Array.isArray(data.data) ? data.data : []);
+                setTables(tablesArray);
                 setTableToken(""); 
             } else {
                 setTables([]);
@@ -79,6 +81,17 @@ export default function Reservation() {
             setIsFetchingTables(false);
         }
     };
+
+    const generateTimeSlots = () => {
+    const slots = [];
+    for (let h = 12; h <= 22; h++) {
+        for (let m = 0; m < 60; m += 15) {
+            slots.push(`${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}`);
+        }
+    }
+    return slots;
+};
+const timeSlots = generateTimeSlots();
 
 
     const addToCart = (dish: any) => {
@@ -129,8 +142,8 @@ export default function Reservation() {
                 },
                 body: JSON.stringify({
                     tableToken,
-                    startTime: new Date(startTime).toISOString(),
-                    endTime: new Date(endTime).toISOString(),
+                    startTime: new Date(`${reservationDate}T${startHour}:00`).toISOString(),
+                    endTime: new Date(`${reservationDate}T${endHour}:00`).toISOString(),
                     dishes: cart.map(item => ({
                      dishToken: item.dishToken,
                      quantity: item.quantity,
@@ -154,8 +167,9 @@ export default function Reservation() {
             setSuccessMsg(data?.message ?? t("reservation.success_message"));
 
             setTableToken("");
-            setStartTime("");
-            setEndTime("");
+          setReservationDate("");
+              setStartHour("");
+              setEndHour("");
             setTables([]);
 
         } catch (err) {
@@ -246,63 +260,89 @@ export default function Reservation() {
 
                     <div className="flex flex-col gap-1">
                       <label className="text-sm font-bold text-gray-500 uppercase tracking-wider ml-1">
-                        {t('reservation.startTime')}
+                        {t('reservation.date', 'Data wizyty')}
                       </label>
                       <input
-                        type="datetime-local"
+                        type="date"
                         required
-                        value={startTime}
-                        onChange={(e) => setStartTime(e.target.value)}
-                        className="p-4 rounded-xl bg-gray-50 border border-gray-200 focus:border-red-500 focus:ring-2 focus:ring-red-200 outline-none transition-all text-left"
+                        min={new Date().toISOString().split("T")[0]} 
+                        value={reservationDate}
+                        onChange={(e) => setReservationDate(e.target.value)}
+                        className="p-4 rounded-xl bg-gray-50 border border-gray-200 focus:border-red-500 focus:ring-2 focus:ring-red-200 outline-none transition-all cursor-pointer"
                       />
                     </div>
 
-                    <div className="flex flex-col gap-1">
-                      <label className="text-sm font-bold text-gray-500 uppercase tracking-wider ml-1">
-                        {t('reservation.endTime')}
-                      </label>
-                      <input
-                        type="datetime-local"
-                        required
-                        value={endTime}
-                        onChange={(e) => setEndTime(e.target.value)}
-                        className="p-4 rounded-xl bg-gray-50 border border-gray-200 focus:border-red-500 focus:ring-2 focus:ring-red-200 outline-none transition-all text-left"
-                      />
+                    <div className="flex gap-4">
+                      <div className="flex flex-col gap-1 w-1/2">
+                        <label className="text-sm font-bold text-gray-500 uppercase tracking-wider ml-1">
+                          {t('reservation.startTime', 'Od godziny')}
+                        </label>
+                        <select
+                          required
+                          value={startHour}
+                          onChange={(e) => setStartHour(e.target.value)}
+                          className="p-4 rounded-xl bg-gray-50 border border-gray-200 focus:border-red-500 focus:ring-2 focus:ring-red-200 outline-none transition-all cursor-pointer"
+                        >
+                          <option value="" disabled>{t('reservation.choose_time', 'Wybierz')}</option>
+                          {timeSlots.map(time => (
+                            <option key={`start-${time}`} value={time}>{time}</option>
+                          ))}
+                        </select>
+                      </div>
+
+                      <div className="flex flex-col gap-1 w-1/2">
+                        <label className="text-sm font-bold text-gray-500 uppercase tracking-wider ml-1">
+                          {t('reservation.endTime', 'Do godziny')}
+                        </label>
+                        <select
+                          required
+                          value={endHour}
+                          onChange={(e) => setEndHour(e.target.value)}
+                          className="p-4 rounded-xl bg-gray-50 border border-gray-200 focus:border-red-500 focus:ring-2 focus:ring-red-200 outline-none transition-all cursor-pointer"
+                        >
+                          <option value="" disabled>{t('reservation.choose_time', 'Wybierz')}</option>
+                          {timeSlots
+                            .filter(time => !startHour || time > startHour)
+                            .map(time => (
+                              <option key={`end-${time}`} value={time}>{time}</option>
+                          ))}
+                        </select>
+                      </div>
                     </div>
 
-                    <div className="flex flex-col gap-1 mt-2">
-                      <label className="text-sm font-bold text-gray-500 uppercase tracking-wider ml-1">
-                        {t('reservation.tableToken')}
-                      </label>
-                      
-                      {!startTime || !endTime ? (
-                          <div className="p-4 rounded-xl bg-gray-100 border border-gray-200 text-gray-500 italic text-sm">
-                              {t('reservation.select_dates_first')}
-                          </div>
-                      ) : isFetchingTables ? (
-                          <div className="p-4 rounded-xl bg-blue-50 border border-blue-200 text-blue-700 text-sm animate-pulse">
-                              {t('reservation.fetching_tables')}
-                          </div>
-                      ) : tables.length === 0 ? (
-                          <div className="p-4 rounded-xl bg-red-50 border border-red-200 text-red-700 text-sm">
-                              {t('reservation.no_tables')}
-                          </div>
-                      ) : (
-                          <select
-                            required
-                            value={tableToken}
-                            onChange={(e) => setTableToken(e.target.value)}
-                            className="p-4 rounded-xl bg-gray-50 border border-gray-200 focus:border-red-500 focus:ring-2 focus:ring-red-200 outline-none transition-all text-left cursor-pointer"
-                          >
-                            <option value="" disabled>{t('reservation.choose_table')}</option>
-                            {tables.map(table => (
-                               <option key={table.token || table.tableToken || table.id} value={table.token || table.tableToken || table.id}>
-                                   {table.name || `Stolik`} - {table.status} ({t('reservation.capacity')}: {table.capacity || '?'})
-                               </option>
-                            ))}
-                          </select>
-                      )}
-                    </div>
+                    <div className="flex flex-col gap-1 mt-4">
+                          <label className="text-sm font-bold text-gray-500 uppercase tracking-wider ml-1">
+                            {t('reservation.tableToken', 'Wybór stolika')}
+                          </label>
+                          
+                          {!reservationDate || !startHour || !endHour ? (
+                              <div className="p-4 rounded-xl bg-gray-100 border border-gray-200 text-gray-500 italic text-sm">
+                                  {t('reservation.select_dates_first', 'Wybierz datę i godziny, aby zobaczyć wolne stoliki.')}
+                              </div>
+                          ) : isFetchingTables ? (
+                              <div className="p-4 rounded-xl bg-blue-50 border border-blue-200 text-blue-700 text-sm animate-pulse">
+                                  {t('reservation.fetching_tables', 'Szukam wolnych stolików...')}
+                              </div>
+                          ) : tables.length === 0 ? (
+                              <div className="p-4 rounded-xl bg-red-50 border border-red-200 text-red-700 text-sm">
+                                  {t('reservation.no_tables', 'Brak wolnych stolików w wybranym terminie.')}
+                              </div>
+                          ) : (
+                              <select
+                                required
+                                value={tableToken}
+                                onChange={(e) => setTableToken(e.target.value)}
+                                className="p-4 rounded-xl bg-gray-50 border border-gray-200 focus:border-red-500 focus:ring-2 focus:ring-red-200 outline-none transition-all text-left cursor-pointer"
+                              >
+                                <option value="" disabled>{t('reservation.choose_table', 'Wybierz stolik')}</option>
+                                {tables.map(table => (
+                                  <option key={table.token || table.tableToken || table.id} value={table.token || table.tableToken || table.id}>
+                                      {table.name || `Stolik`} - {table.status} (Miejsc: {table.capacity || '?'})
+                                  </option>
+                                ))}
+                              </select>
+                          )}
+                        </div>
 
                     <div className="flex flex-col gap-2 mt-4 border-t border-gray-100 pt-4">
                       <label className="text-sm font-bold text-gray-500 uppercase tracking-wider ml-1">
@@ -331,10 +371,11 @@ export default function Reservation() {
                           ))
                         )}
                       </div>
+                      
 
                       {cart.length > 0 && (
                         <div className="flex flex-col gap-3 mt-2 p-4 bg-red-50/50 rounded-xl border border-red-100">
-                          <h4 className="font-bold text-red-800 text-sm">Twój pre-order:</h4>
+                          <h4 className="font-bold text-red-800 text-sm">{t('reservation.preorder', 'Twój pre-order:')}</h4>
                           
                           {cart.map(item => (
                             <div key={item.dishToken} className="flex flex-col gap-2 bg-white p-3 rounded-lg shadow-sm border border-red-50">
