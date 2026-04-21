@@ -9,7 +9,8 @@
     "userMenu": "Menu użytkownika",
     "openMenu": "Otwórz menu",
     "hello": "Witaj",
-    "logout": "Wyloguj się"
+    "logout": "Wyloguj się",
+    "myReservations": "Moje rezerwacje"
   },
   "home": {
     "hero": {
@@ -189,22 +190,26 @@
   "reservation": {
     "title": "Rezerwacja",
     "description": "Zarezerwuj stolik w Qui i ciesz się wyjątkowym doświadczeniem kulinarnym! Oferujemy łatwy i szybki system rezerwacji online, który pozwala Ci zarezerwować stolik w kilka chwil.",
-    "tableToken": "Token Stolika",
-    "tableTokenPlaceholder": "np. T-12345",
-    "startTime": "Czas rozpoczęcia",
-    "endTime": "Czas zakończenia",
-    "submitBtn": "Zarezerwuj teraz",
-    "loading": "Przetwarzanie...",
-    "error_generic": "Nie udało się utworzyć rezerwacji.",
-    "success_message": "Stolik został pomyślnie zarezerwowany!",
-    "connection_error": "Wystąpił błąd przy łączeniu z serwerem.",
     "login_required_title": "Wymagane logowanie",
-    "login_required_desc": "Tylko zalogowani goście mogą rezerwować stoliki.",
-    "select_dates_first": "Wybierz najpierw czas rozpoczęcia i zakończenia, aby zobaczyć dostępne stoliki.",
-    "fetching_tables": "Szukanie dostępnych stolików...",
-    "no_tables": "Brak dostępnych stolików w wybranym przedziale czasowym.",
-    "choose_table": "-- Wybierz stolik z listy --",
-    "capacity": "Max osób",
-    "error_unauthorized": "Musisz być zalogowany, aby dokonać rezerwacji."
+    "login_required_desc": "Musisz być zalogowany, aby móc zarezerwować stolik i zamówić dania.",
+    "error_unauthorized": "Odmowa dostępu. Zaloguj się ponownie.",
+    "error_generic": "Wystąpił nieoczekiwany błąd. Spróbuj ponownie później.",
+    "success_message": "Twoja rezerwacja została pomyślnie złożona!",
+    "connection_error": "Błąd połączenia z serwerem. Sprawdź swoje połączenie z internetem.",
+    "date": "Data wizyty",
+    "startTime": "Od godziny",
+    "endTime": "Do godziny",
+    "choose_time": "Wybierz",
+    "tableToken": "Wybór stolika",
+    "select_dates_first": "Wybierz datę i godziny, aby zobaczyć wolne stoliki.",
+    "fetching_tables": "Szukam wolnych stolików...",
+    "no_tables": "Brak wolnych stolików w wybranym terminie.",
+    "choose_table": "Wybierz stolik",
+    "dishes": "Dania",
+    "optional": "opcjonalnie",
+    "notePlaceholder": "Notatka dla kucharza (np. bez cebuli)",
+    "loading": "Przetwarzanie...",
+    "submitBtn": "Zarezerwuj teraz",
+    "preorder": "Twój pre-order:"
   }
 }
