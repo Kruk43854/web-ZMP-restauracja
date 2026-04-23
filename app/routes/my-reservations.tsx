@@ -187,9 +187,7 @@ export default function Menu() {
 
                 <div className="p-6 mt-auto">
                   <div className="flex items-center gap-3 text-gray-500 mb-6">
-                     <svg className="w-5 h-5 opacity-40" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M15 5v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" strokeWidth="2" /></svg>
-                     <span className="text-sm font-medium">Token: <code className="bg-gray-100 px-2 py-0.5 rounded text-xs">{res.token.substring(0, 8)}...</code></span>
-                  </div>
+                                       </div>
                   
                   <button className="w-full py-3 rounded-xl border-2 border-gray-100 text-gray-400 font-bold text-sm hover:border-gray-200 hover:text-gray-600 transition-all"
                   onClick={() => setSelectedToken(res.token)}>
