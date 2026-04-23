@@ -81,7 +81,6 @@ export default function Menu() {
     }
   };
 
-  console.log("Reservations data:", reservations); 
   const formatDateTime = (isoString: string) => {
     return new Intl.DateTimeFormat(i18n.language, {
       day: '2-digit',
