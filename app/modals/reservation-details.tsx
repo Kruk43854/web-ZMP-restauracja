@@ -111,7 +111,7 @@ export default function ReservationDetailsModal({ token, onClose }: ReservationD
                             <p className="text-sm font-black text-gray-900">
                               {(dish.price / 100).toFixed(2)} PLN
                             </p>
-                            <p className="text-[10px] font-bold text-gray-400 uppercase">szt: {dish.quantity}</p>
+                            <p className="text-[10px] font-bold text-gray-400 uppercase">{t('myreservations.quantity', 'szt:')} {dish.quantity}</p>
                           </div>
                         </div>
                         {dish.note && (
@@ -131,14 +131,14 @@ export default function ReservationDetailsModal({ token, onClose }: ReservationD
                         {((details.totalPrice || 0) / 100).toFixed(2)} <span className="text-lg">PLN</span>
                       </p>
                     </div>
-                    <p className="text-[10px] text-gray-400 max-w-30 text-right italic">
+                    <p className="text-[14px] text-gray-400 max-w-50 text-right italic">
                       {t('details.paymentInfo', 'Płatność zostanie zrealizowana w restauracji podczas wizyty.')}
                     </p>
                   </div>
                 </div>
               ) : (
                 <div className="text-center py-10 bg-gray-50 rounded-3xl border-2 border-dashed border-gray-200">
-                  <p className="text-gray-400 font-medium">Brak dodatkowych dań w tej rezerwacji</p>
+                  <p className="text-gray-400 font-medium">{t('myreservations.noDishes', 'No additional dishes in this reservation.')}</p>
                 </div>
               )}
             </div>
