@@ -169,21 +169,6 @@ export default function Register() {
               )}
             </button>
 
-            <div className="flex items-center gap-4 my-2 opacity-70">
-              <div className="flex-1 h-px bg-gray-300"></div>
-              <span className="text-sm font-medium text-gray-500">{t('register.or')}</span>
-              <div className="flex-1 h-px bg-gray-300"></div>
-            </div>
-
-            <div className="flex flex-col gap-3 opacity-50 relative group">
-              <div className="absolute -inset-2 bg-transparent z-10 cursor-not-allowed" title={t('register.comingSoon')}></div>
-              <button type="button" disabled className="w-full bg-[#1877F2] text-white font-semibold py-3 rounded-xl flex justify-center items-center gap-2">
-                {t('register.fbBtn')}
-              </button>
-              <button type="button" disabled className="w-full bg-white text-gray-700 border border-gray-300 font-semibold py-3 rounded-xl flex justify-center items-center gap-2">
-                {t('register.googleBtn')}
-              </button>
-            </div>
 
             <div className="mt-4 flex flex-col gap-3 text-center text-sm">              
               <div className="text-gray-600 mt-2">
