@@ -36,7 +36,7 @@ export default function Navbar() {
   };
 
   return (
-    <nav className="bg-green-500 fixed w-full z-20 top-0 border-b border-green-800 shadow-md">
+    <nav className="bg-green-500 fixed w-full z-50 top-0 border-b border-green-800 shadow-md">
       <div className="max-w-7xl flex flex-wrap items-center justify-between mx-auto p-4">
         
         <Link to="/" className="flex items-center space-x-3 rtl:space-x-reverse">
