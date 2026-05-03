@@ -4,10 +4,9 @@ import { useTranslation } from "react-i18next";
 import { useAuth } from "../contexts/AuthContext";
 import { GoogleLogin } from "@react-oauth/google";
 
-
 export default function Login() {
   const { t } = useTranslation();
-  const { login } = useAuth();
+  const { login } = useAuth(); 
   
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -26,25 +25,15 @@ export default function Login() {
     setIsLoading(true);
 
     try {
-        const response = await fetch('/api/auth/login', {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Accept": "application/json",
-        },
-        body: JSON.stringify({ username, password }),
-      });
+      const success = await login({ username, password });
 
-      const data = await response.json();
-
-      if (response.ok && data.success) {
-      login(data.data.token, data.data.refreshToken, data.data.username);
+      if (success) {
         navigate("/");
       } else {
-        setError(data.message || t('login.errors.invalidCredentials'));
+        setError(t('login.errors.invalidCredentials', 'Nieprawidłowe dane logowania.'));
       }
     } catch (err) {
-      setError(t('login.errors.serverError'));
+      setError(t('login.errors.serverError', 'Błąd serwera.'));
     } finally {
       setIsLoading(false);
     }
@@ -61,19 +50,19 @@ export default function Login() {
           "Content-Type": "application/json",
           "Accept": "application/json",
         },
+        credentials: "include", 
         body: JSON.stringify({ token: credentialResponse.credential }),
       });
 
       const data = await response.json();
 
       if (response.ok && data.success) {
-      login(data.data.token, data.data.refreshToken, data.data.username);
-        navigate("/");
+        window.location.href = "/";
       } else {
-        setError(data.message || t('login.errors.invalidCredentials'));
+        setError(data.message || t('login.errors.invalidCredentials', 'Błąd logowania.'));
       }
     } catch (err) {
-      setError(t('login.errors.serverError'));
+      setError(t('login.errors.serverError', 'Błąd serwera.'));
     } finally {
       setIsLoading(false);
     }
@@ -144,15 +133,14 @@ export default function Login() {
             </div>
 
             <div className="flex flex-col gap-3 relative group">
-          
               <div className="flex justify-center w-full mt-1">
                  <GoogleLogin
-                    onSuccess={handleGoogleSuccess}
-                    onError={() => setError(t('login.errors.googleFailed', 'Błąd połączenia z Google'))}
-                    useOneTap
-                    theme="outline"
-                    shape="pill"
-                    width="100%"
+                   onSuccess={handleGoogleSuccess}
+                   onError={() => setError(t('login.errors.googleFailed', 'Błąd połączenia z Google'))}
+                   useOneTap
+                   theme="outline"
+                   shape="pill"
+                   width="100%"
                  />
               </div>
             </div>
