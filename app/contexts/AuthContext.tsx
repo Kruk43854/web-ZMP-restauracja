@@ -52,22 +52,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return response;
   };
 
-  // useEffect(() => {
-  //   const checkAuthStatus = async () => {
-  //     try {
-  //       const response = await authFetch('/api/reservations?page=1&size=1', { method: "GET" });
-  //       if (response.ok) {
-  //         setIsAuthenticated(true);
-  //       }
-  //     } catch (error) {
-  //       setIsAuthenticated(false);
-  //     } finally {
-  //       setIsInitializing(false);
-  //     }
-  //   };
+  useEffect(() => {
+    const checkAuthStatus = async () => {
+      try {
+        const response = await authFetch('/api/reservations?page=1&size=1', { method: "GET" });
+        if (response.ok) {
+          setIsAuthenticated(true);
+        }
+      } catch (error) {
+        setIsAuthenticated(false);
+      } finally {
+        setIsInitializing(false);
+      }
+    };
 
-  //   checkAuthStatus();
-  // }, []);
+    checkAuthStatus();
+  }, []);
 
   const login = async (credentials: any) => {
     try {
