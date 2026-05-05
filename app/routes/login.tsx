@@ -5,6 +5,7 @@ import { useAuth } from "../contexts/AuthContext";
 import { GoogleLogin } from "@react-oauth/google";
 
 export default function Login() {
+  const API_URL = import.meta.env.VITE_API_URL || "";
   const { t } = useTranslation();
   const { login } = useAuth(); 
   
@@ -44,7 +45,7 @@ export default function Login() {
     setIsLoading(true);
 
     try {
-      const response = await fetch('/api/auth/google', {
+      const response = await fetch(`${API_URL}/api/auth/google`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

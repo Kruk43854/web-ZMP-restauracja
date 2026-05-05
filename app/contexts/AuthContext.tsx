@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import type { ReactNode } from "react";
+const API_URL = import.meta.env.VITE_API_URL || "";
 
 interface AuthContextType {
   isAuthenticated: boolean;
@@ -42,7 +43,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       credentials: "include", 
     };
 
-    let response = await fetch(url, config);
+    let response = await fetch(`${API_URL}${url}`, config);
 
     if (response.status === 401) {
       setIsAuthenticated(false);
@@ -70,7 +71,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const login = async (credentials: any) => {
     try {
-      const response = await fetch('/api/auth/login', {
+      const response = await fetch(`${API_URL}/api/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(credentials),
@@ -89,7 +90,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const logout = async () => {
     try {
-      await authFetch('/api/auth/logout', { method: "POST" });
+      await authFetch(`${API_URL}/api/auth/logout`, { method: "POST" });
     } catch (error) {
       console.error("Błąd podczas wylogowywania", error);
     } finally {
