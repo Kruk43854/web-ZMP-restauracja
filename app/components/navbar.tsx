@@ -55,7 +55,7 @@ export default function Navbar() {
             className="flex items-center justify-center w-10 h-10 bg-green-700 text-white rounded-full hover:bg-green-800 transition-colors focus:ring-4 ring-2 ring-green-700 shadow-sm text-lg"
             title={i18n.language?.startsWith('pl') ? 'Switch to English' : 'Zmień na polski'}
           >
-            {i18n.language?.startsWith('pl') ? '🇵🇱' : '🇬🇧'}
+            {i18n.language?.startsWith('pl') ? 'PL' : 'EN'}
           </button>
 
           <div className="relative hidden md:block">
