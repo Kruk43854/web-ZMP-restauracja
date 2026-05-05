@@ -138,7 +138,6 @@ export default function Login() {
                  <GoogleLogin
                    onSuccess={handleGoogleSuccess}
                    onError={() => setError(t('login.errors.googleFailed', 'Błąd połączenia z Google'))}
-                   useOneTap
                    theme="outline"
                    shape="pill"
                    width="100%"
