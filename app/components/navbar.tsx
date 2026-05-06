@@ -11,7 +11,7 @@ export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
   
-  const { username, logout } = useAuth(); 
+  const { isAuthenticated, username, logout } = useAuth(); 
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
@@ -40,7 +40,6 @@ export default function Navbar() {
       <div className="max-w-7xl flex flex-wrap items-center justify-between mx-auto p-4">
         
         <Link to="/" className="flex items-center space-x-3 rtl:space-x-reverse">
-        {/* tu bedzie logo */}
           <p className="text-2xl font-bold">🍕</p> 
           <span className="self-center text-4xl font-semibold font-fancy whitespace-nowrap text-white">
             <i>Qui la Carne</i>
@@ -63,7 +62,7 @@ export default function Navbar() {
               onClick={toggleUserDropdown}
               type="button"
               className={`flex text-sm rounded-full w-10 h-10 items-center justify-center text-white ring-2 transition-all focus:ring-4 ${
-                username ? 'bg-green-800 ring-green-900 focus:ring-green-300 hover:ring-white' : 'bg-red-600 ring-red-800 focus:ring-red-100 hover:ring-white'
+                isAuthenticated ? 'bg-green-800 ring-green-900 focus:ring-green-300 hover:ring-white' : 'bg-red-600 ring-red-800 focus:ring-red-100 hover:ring-white'
               }`}
               aria-expanded={isUserDropdownOpen}
             >
@@ -75,11 +74,10 @@ export default function Navbar() {
 
             <div className={`${isUserDropdownOpen ? 'block' : 'hidden'} absolute right-0 mt-3 z-50 w-48 text-base list-none bg-white rounded-2xl shadow-xl border border-gray-100 divide-y divide-gray-100 transform origin-top-right transition-all`}>
               <ul className="py-2 px-1.5">
-
-                {username ? (
+                {isAuthenticated ? (
                   <>
                     <li className="block px-4 py-3 text-sm text-gray-900 font-bold border-b border-gray-100 mb-1 truncate">
-                      {t('navbar.hello')}, <span className="text-green-600">{username}</span>!
+                      {t('navbar.hello')}, <span className="text-green-600">{username || 'Użytkowniku'}</span>!
                     </li>
                     <li><Link to="/settings" onClick={closeMenus} className="block px-4 py-2 text-sm text-gray-700 rounded-xl hover:bg-gray-100">{t('navbar.settings')}</Link></li>
                     <li>
@@ -122,10 +120,10 @@ export default function Navbar() {
             <li><Link to="/about" className="block py-2 px-4 text-center text-white rounded-2xl hover:bg-green-800 transition-colors">{t('navbar.about')}</Link></li>
             <li><Link to="/my-reservations" className="block py-2 px-4 text-center text-white rounded-2xl hover:bg-green-800 transition-colors">{t('navbar.myReservations')}</Link></li>
 
-            {username ? (
+            {isAuthenticated ? (
               <li className='md:hidden border-t border-green-500 pt-2 w-full mt-1'>
                 <button onClick={handleLogout} className="w-full block py-2 px-4 text-center text-red-200 font-bold rounded-2xl hover:bg-green-800 transition-colors">
-                  {t('navbar.logout')} ({username})
+                  {t('navbar.logout')} {username ? `(${username})` : ''}
                 </button>
               </li>
             ) : (
