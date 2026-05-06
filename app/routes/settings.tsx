@@ -3,13 +3,13 @@ import { useTranslation } from "react-i18next";
 import { useAuth } from "../contexts/AuthContext";
 import { Link, useNavigate } from "react-router";
 
-
 export default function Settings() {
   const { t } = useTranslation();
   const navigate = useNavigate();
   
   const [activeTab, setActiveTab] = useState<"profile" | "security">("profile");
-  const { token, updateUsername, logout } = useAuth();
+  
+  const { isAuthenticated, authFetch, logout } = useAuth();
 
   const [username, setUsername] = useState("");
   const [profileMsg, setProfileMsg] = useState("");
@@ -28,7 +28,7 @@ export default function Settings() {
   const [isSecuritySuccess, setIsSecuritySuccess] = useState(false);
   const [isSecurityLoading, setIsSecurityLoading] = useState(false);
 
-    useEffect(() => {
+  useEffect(() => {
     document.title = t("settings.title") + " - Qui la Carne";
   }, [t]);
 
@@ -41,13 +41,12 @@ export default function Settings() {
     e.preventDefault();
     setProfileMsg(""); setIsProfileSuccess(false);
 
-    if (!username.trim() || !token) return;
+    if (!username.trim() || !isAuthenticated) return;
     setIsProfileLoading(true);
 
     try {
-      const response = await fetch(`/api/user/me/username?userName=${encodeURIComponent(username)}`, {
+      const response = await authFetch(`/api/user/me/username?userName=${encodeURIComponent(username)}`, {
         method: "PATCH",
-        headers: { "Accept": "application/json", "Authorization": `Bearer ${token}` },
       });
 
       const data = await response.json().catch(() => null);
@@ -59,7 +58,9 @@ export default function Settings() {
 
       setIsProfileSuccess(true);
       setProfileMsg(data?.message ?? t("settings.profile.success_username"));
-      updateUsername(username);
+      localStorage.setItem("username", username);
+
+      setTimeout(() => window.location.reload(), 1500);
     } catch {
       setProfileMsg(t("settings.connection_error"));
     } finally {
@@ -71,13 +72,12 @@ export default function Settings() {
     e.preventDefault();
     setEmailMsg(""); setIsEmailSuccess(false);
 
-    if (!email.trim() || !token) return;
+    if (!email.trim() || !isAuthenticated) return;
     setIsEmailLoading(true);
 
     try {
-      const response = await fetch(`/api/user/me/email/update?email=${encodeURIComponent(email)}`, {
+      const response = await authFetch(`/api/user/me/email/update?email=${encodeURIComponent(email)}`, {
         method: "PATCH",
-        headers: { "Accept": "application/json", "Authorization": `Bearer ${token}` },
       });
 
       const data = await response.json().catch(() => null);
@@ -105,17 +105,12 @@ export default function Settings() {
       setSecurityMsg(t("settings.security.error_mismatch"));
       return;
     }
-    if (!token) return;
+    if (!isAuthenticated) return;
     setIsSecurityLoading(true);
 
     try {
-      const response = await fetch(`/api/user/me/password`, {
+      const response = await authFetch(`/api/user/me/password`, {
         method: "PATCH",
-        headers: { 
-          "Content-Type": "application/json",
-          "Accept": "application/json", 
-          "Authorization": `Bearer ${token}` 
-        },
         body: JSON.stringify({
           oldPassword,
           password: newPassword,
@@ -142,17 +137,15 @@ export default function Settings() {
 
   const handleDeleteAccount = async () => {
     if (!window.confirm(t("settings.security.delete_confirm_prompt"))) return;
-    if (!token) return;
+    if (!isAuthenticated) return;
 
     try {
-      const response = await fetch(`/api/user/me/delete`, {
+      const response = await authFetch(`/api/user/me/delete`, {
         method: "DELETE",
-        headers: { "Accept": "application/json", "Authorization": `Bearer ${token}` },
       });
 
       if (response.ok) {
-        localStorage.removeItem("token");
-        localStorage.removeItem("username");
+        await logout();
         navigate("/");
         window.location.reload();
       } else {
@@ -163,8 +156,16 @@ export default function Settings() {
     }
   };
 
-  if (!token) {
-    return <div className="text-center mt-32 text-2xl font-bold">{t("settings.unauthorized")}</div>;
+  if (!isAuthenticated) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[60vh] text-center px-4">
+         <h2 className="text-3xl font-bold text-gray-800 mb-4">Sesja wygasła</h2>
+         <p className="text-gray-600 mb-6">Zaloguj się ponownie, aby uzyskać dostęp do ustawień.</p>
+         <Link to="/login" className="bg-red-700 text-white font-bold py-3 px-8 rounded-xl hover:bg-red-800 transition-colors shadow-lg">
+            Przejdź do logowania
+         </Link>
+      </div>
+    );
   }
 
   return (
