@@ -1,15 +1,14 @@
 import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router"; 
 import { useTranslation } from "react-i18next"; 
 import { useAuth } from "../contexts/AuthContext";
 import { GoogleLogin } from "@react-oauth/google";
 
 export default function Login() {
-  const API_URL = import.meta.env.VITE_API_URL || "";
   const { t } = useTranslation();
-  const { login } = useAuth(); 
+  const { login, loginGoogle } = useAuth(); 
   
-  const [username, setUsername] = useState("");
+  const [username, setUsernameInput] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -45,22 +44,12 @@ export default function Login() {
     setIsLoading(true);
 
     try {
-      const response = await fetch(`${API_URL}/api/auth/google`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Accept": "application/json",
-        },
-        credentials: "include", 
-        body: JSON.stringify({ token: credentialResponse.credential }),
-      });
+      const success = await loginGoogle(credentialResponse.credential);
 
-      const data = await response.json();
-
-      if (response.ok && data.success) {
-        window.location.href = "/";
+      if (success) {
+        navigate("/"); 
       } else {
-        setError(data.message || t('login.errors.invalidCredentials', 'Błąd logowania.'));
+        setError(t('login.errors.invalidCredentials', 'Błąd logowania.'));
       }
     } catch (err) {
       setError(t('login.errors.serverError', 'Błąd serwera.'));
@@ -100,7 +89,7 @@ export default function Login() {
               placeholder={t('login.usernamePlaceholder')}
               required
               value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              onChange={(e) => setUsernameInput(e.target.value)}
               className="p-4 rounded-xl bg-gray-50 border border-gray-200 focus:border-red-500 focus:ring-2 focus:ring-red-200 outline-none transition-all text-left"
             />
 
@@ -138,6 +127,7 @@ export default function Login() {
                  <GoogleLogin
                    onSuccess={handleGoogleSuccess}
                    onError={() => setError(t('login.errors.googleFailed', 'Błąd połączenia z Google'))}
+                   useOneTap
                    theme="outline"
                    shape="pill"
                    width="100%"
