@@ -78,7 +78,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     const checkAuthStatus = async () => {
       try {
-        const response = await authFetch('/api/reservations?page=1&size=1', { method: "GET" });
+        const response = await authFetch('/api/auth/me', { method: "GET" });
         if (response.ok) {
           const data = await response.json();
           setIsAuthenticated(true);
