@@ -60,10 +60,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     const checkAuthStatus = async () => {
       try {
-        const response = await fetch(`${API_URL}/api/auth/refresh`, {
-          method: "POST",
-          credentials: "include"
-        });
+        const response = await authFetch('/api/auth/refresh', { method: "POST" });
 
         if (response.ok) {
           const result = await response.json();
@@ -104,7 +101,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setIsAuthenticated(true);
         if (user) {
           setUsername(user);
-          localStorage.setItem("username", user);
+          localStorage.setItem("username", user); 
         }
         return true;
       }
