@@ -48,11 +48,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     };
 
     const response = await fetch(`${API_URL}${url}`, config);
-
-
     if (response.status === 401) {
       setIsAuthenticated(false);
       setUsername(null);
+      localStorage.removeItem("username");
     }
 
     return response;
@@ -61,18 +60,26 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     const checkAuthStatus = async () => {
       try {
-        const response = await authFetch('/api/reservations?page=1&size=1', { method: "GET" });
+        const response = await fetch(`${API_URL}/api/auth/refresh`, {
+          method: "POST",
+          credentials: "include"
+        });
+
         if (response.ok) {
-          const data = await response.json();
+          const result = await response.json();
           setIsAuthenticated(true);
-          setUsername(data?.data?.username || data?.username || null);
+          const fetchedName = result?.data?.username || result?.username || localStorage.getItem("username");
+          if (fetchedName) {
+            setUsername(fetchedName);
+            localStorage.setItem("username", fetchedName);
+          }
         } else {
           setIsAuthenticated(false);
           setUsername(null);
+          localStorage.removeItem("username");
         }
       } catch (error) {
         setIsAuthenticated(false);
-        setUsername(null);
       } finally {
         setIsInitializing(false);
       }
@@ -92,8 +99,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
       if (response.ok) {
         const result = await response.json();
+        const user = result?.data?.username || result?.username;
+        
         setIsAuthenticated(true);
-        setUsername(result?.data?.username || result?.username || null); 
+        if (user) {
+          setUsername(user);
+          localStorage.setItem("username", user);
+        }
         return true;
       }
       return false;
@@ -106,19 +118,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     try {
       const response = await fetch(`${API_URL}/api/auth/google`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Accept": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         credentials: "include", 
         body: JSON.stringify({ token }),
       });
 
-      const data = await response.json();
-
-      if (response.ok && data.success !== false) {
+      if (response.ok) {
+        const data = await response.json();
+        const user = data?.data?.username || data?.username;
+        
         setIsAuthenticated(true);
-        setUsername(data?.data?.username || data?.username || null);
+        if (user) {
+          setUsername(user);
+          localStorage.setItem("username", user);
+        }
         return true;
       }
       return false;
@@ -131,10 +144,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     try {
       await authFetch('/api/auth/logout', { method: "POST" });
     } catch (error) {
-      console.error("Błąd podczas wylogowywania", error);
+      console.error("Logout error", error);
     } finally {
       setIsAuthenticated(false);
       setUsername(null);
+      localStorage.removeItem("username");
     }
   };
 
