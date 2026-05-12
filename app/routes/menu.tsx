@@ -1,8 +1,9 @@
-import { useState, useEffect, use } from "react";
+import { useState, useEffect } from "react";
 import { useAuth } from "../contexts/AuthContext";
 import { Link } from "react-router";
 import { useTranslation } from "react-i18next";
 import i18n from "../i18n";
+const API_URL = import.meta.env.VITE_API_URL || "";
 
 export default function Menu() {
   const { t } = useTranslation();
@@ -17,26 +18,53 @@ export default function Menu() {
   }, [t]);
 
   useEffect(() => {
-    if (!isAuthenticated) return;
-    const fetchMenu = async () => {
+    const fetchMenuData = async () => {
       setIsLoading(true);
       setError(null);
-      
-      try {
-        const response = await authFetch('/api/dishes?page=1&size=15', {
-          method: "GET",
-          headers: {
-            "Accept": "application/json",
-            "Accept-Language": i18n.language,
-          },
-        });
 
-        if (response.ok) {
-          const result = await response.json();
-          const items = result.data?.items || [];
-          setMenuItems(items); 
+      try {
+        if (isAuthenticated) {
+          const response = await authFetch('/api/dishes?page=1&size=50', {
+            method: "GET",
+            headers: {
+              "Accept": "application/json",
+              "Accept-Language": i18n.language,
+            },
+          });
+
+          if (response.ok) {
+            const result = await response.json();
+            const items = result.data?.items || [];
+            setMenuItems(items);
+          } else {
+            setError(`Odmowa dostępu (Kod: ${response.status}).`);
+          }
+
         } else {
-          setError(`Odmowa dostępu (Kod: ${response.status}).`);
+          const response = await fetch(`${API_URL}/api/dishes/menu/public`, {
+            method: "GET",
+            headers: {
+              "Accept": "application/json",
+              "Accept-Language": i18n.language,
+            },
+          });
+
+          if (response.ok) {
+            const result = await response.json();
+            const publicMenuCategories = result.data?.menu || [];
+            
+            const flatItems = publicMenuCategories.flatMap((categoryObj: any) => {
+               return (categoryObj.dish || []).map((d: any) => ({
+                  ...d,
+                  categoryName: categoryObj.category, 
+                  ingredients: d.ingridents || [], 
+               }));
+            });
+
+            setMenuItems(flatItems);
+          } else {
+            setError(`Błąd pobierania menu (Kod: ${response.status}).`);
+          }
         }
       } catch (err) {
         setError("Wystąpił błąd przy połączeniu z serwerem.");
@@ -45,57 +73,13 @@ export default function Menu() {
       }
     };
 
-    fetchMenu();
-  }, [i18n.language, authFetch]);
-
-useEffect(() => {
-  if (isAuthenticated) return;
-
-  const fetchGuestMenu = async () => {
-    setIsLoading(true);
-    setError(null);
-    try {
-      const response = await fetch('/api/dishes/menu/public', {
-        method: "GET",
-        headers: {
-          "Accept": "application/json",
-          "Accept-Language": i18n.language,
-        },
-      });
-
-      if (response.ok) {
-        const result = await response.json();
-        
-        const publicMenuCategories = result.data?.menu || [];
-        
-        const flatItems = publicMenuCategories.flatMap((categoryObj: any) => {
-           return (categoryObj.dish || []).map((d: any) => ({
-              ...d,
-              categoryName: categoryObj.category, 
-              ingredients: d.ingridents || [], 
-           }));
-        });
-
-        setMenuItems(flatItems);
-      } else {
-        setError(`Odmowa dostępu (Kod: ${response.status}).`);
-      }
-    } catch (err) {
-      setError("Wystąpił błąd przy połączeniu z serwerem.");
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  fetchGuestMenu();
-}, [i18n.language, isAuthenticated]);
-
+    fetchMenuData();
+  }, [isAuthenticated, i18n.language, authFetch]);
 
   const formatPrice = (priceInGrosze: number) => {
     if (!priceInGrosze) return "0.00 PLN";
     return (priceInGrosze / 100).toFixed(2) + " PLN";
   };
-
 
   const groupedMenu = menuItems.reduce((acc: any, dish: any) => {
     const category = dish.categoryName || "Inne"; 
