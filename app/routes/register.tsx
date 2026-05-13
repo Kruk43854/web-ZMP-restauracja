@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router";
 import { useTranslation } from "react-i18next"; 
+const API_URL = import.meta.env.VITE_API_URL || "";
 
 
 
@@ -44,7 +45,7 @@ export default function Register() {
     setSuccess(false);
 
     try {
-        const response = await fetch('/api/auth/register', {
+        const response = await fetch(`${API_URL}/api/auth/register`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
