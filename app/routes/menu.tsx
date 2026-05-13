@@ -30,20 +30,30 @@ export default function Menu() {
 
       try {
         if (isAuthenticated) {
-          const [menuRes, catRes, algRes] = await Promise.all([
-            authFetch('/api/dishes?page=1&size=100'),
-            authFetch('/api/dictionary/dish-categories'),
-            authFetch('/api/dictionary/allergens')
-          ]);
-
-          if (menuRes.ok && catRes.ok && algRes.ok) {
+          const menuRes = await authFetch('/api/dishes?page=1&size=100');
+          
+          if (menuRes.ok) {
             const menuData = await menuRes.json();
-            const catData = await catRes.json();
-            const algData = await algRes.json();
-
             setMenuItems(menuData.data?.items || []);
-            setCategories(catData.data || []);
-            setAllergens(algData.data || []);
+          } else {
+            setError(`Odmowa dostępu do dań (Kod: ${menuRes.status}).`);
+          }
+          try {
+            const [catRes, algRes] = await Promise.all([
+              authFetch('/api/dictionary/dish-categories'),
+              authFetch('/api/dictionary/allergens')
+            ]);
+
+            if (catRes.ok) {
+              const catData = await catRes.json();
+              setCategories(catData.data || []);
+            }
+            if (algRes.ok) {
+              const algData = await algRes.json();
+              setAllergens(algData.data || []);
+            }
+          } catch (dictionaryError) {
+            console.warn("Błąd autoryzacji do słowników (403). Filtry mogą być niedostępne.");
           }
         } else {
           const response = await fetch(`${API_URL}/api/dishes/menu/public`, {
@@ -70,6 +80,7 @@ export default function Menu() {
 
     fetchData();
   }, [isAuthenticated, i18n.language, authFetch]);
+
   const filteredMenu = useMemo(() => {
     return menuItems.filter(dish => {
       const matchesCategory = selectedCategories.length === 0 || 
@@ -108,45 +119,54 @@ export default function Menu() {
     <main className="grow pt-16 bg-gray-50 min-h-screen">
       <header className="relative h-48 bg-cover bg-center flex items-center justify-center" style={{ backgroundImage: "url('/tlo.jpg')" }}>
         <div className="absolute inset-0 bg-black/60"></div>
-        <h1 className="relative z-10 text-5xl italic font-bold font-fancy text-red-500">{t('menu.title')}</h1>
+        <h1 className="relative z-10 text-5xl italic font-bold font-fancy text-red-500">{t('menu.title', 'Menu')}</h1>
       </header>
 
       <div className="container mx-auto px-4 max-w-7xl flex flex-col lg:flex-row gap-8 py-12">
-
-        {isAuthenticated && !isLoading && (
+        
+        {isAuthenticated && !isLoading && (categories.length > 0 || allergens.length > 0) && (
           <aside className="w-full lg:w-1/4 flex flex-col gap-6">
             <div className="bg-white p-6 rounded-3xl shadow-lg border border-gray-100">
-              <h3 className="text-xl font-bold mb-4 border-b pb-2">{t('menu.filter_categories', 'Kategorie')}</h3>
-              <div className="flex flex-wrap lg:flex-col gap-2">
-                {categories.map(cat => (
-                  <button 
-                    key={cat.token} 
-                    onClick={() => toggleCategory(cat.name)}
-                    className={`px-4 py-2 rounded-xl text-sm font-medium transition-all border ${
-                      selectedCategories.includes(cat.name) ? 'bg-red-600 text-white border-red-600' : 'bg-gray-50 text-gray-600 border-gray-200 hover:border-red-300'
-                    }`}
-                  >
-                    {cat.name}
-                  </button>
-                ))}
-              </div>
+              
+              {categories.length > 0 && (
+                <>
+                  <h3 className="text-xl font-bold mb-4 border-b pb-2">{t('menu.filter_categories', 'Kategorie')}</h3>
+                  <div className="flex flex-wrap lg:flex-col gap-2">
+                    {categories.map(cat => (
+                      <button 
+                        key={cat.token || cat.id || cat.name} 
+                        onClick={() => toggleCategory(cat.name)}
+                        className={`px-4 py-2 rounded-xl text-sm font-medium transition-all border ${
+                          selectedCategories.includes(cat.name) ? 'bg-red-600 text-white border-red-600' : 'bg-gray-50 text-gray-600 border-gray-200 hover:border-red-300'
+                        }`}
+                      >
+                        {cat.name}
+                      </button>
+                    ))}
+                  </div>
+                </>
+              )}
 
-              <h3 className="text-xl font-bold mb-4 border-b pb-2 mt-8 text-orange-700">
-                {t('menu.filter_allergens', 'Wyklucz alergeny')}
-              </h3>
-              <div className="flex flex-wrap lg:flex-col gap-2">
-                {allergens.map(alg => (
-                  <button 
-                    key={alg.token} 
-                    onClick={() => toggleAllergen(alg.name)}
-                    className={`px-4 py-2 rounded-xl text-sm font-medium transition-all border ${
-                      excludedAllergens.includes(alg.name) ? 'bg-orange-500 text-white border-orange-500 shadow-md' : 'bg-gray-50 text-gray-600 border-gray-200 hover:border-orange-300'
-                    }`}
-                  >
-                    {excludedAllergens.includes(alg.name) ? '✕ ' : ''}{alg.name}
-                  </button>
-                ))}
-              </div>
+              {allergens.length > 0 && (
+                <>
+                  <h3 className={`text-xl font-bold mb-4 border-b pb-2 ${categories.length > 0 ? 'mt-8' : ''} text-orange-700`}>
+                    {t('menu.filter_allergens', 'Wyklucz alergeny')}
+                  </h3>
+                  <div className="flex flex-wrap lg:flex-col gap-2">
+                    {allergens.map(alg => (
+                      <button 
+                        key={alg.token || alg.id || alg.name} 
+                        onClick={() => toggleAllergen(alg.name)}
+                        className={`px-4 py-2 rounded-xl text-sm font-medium transition-all border ${
+                          excludedAllergens.includes(alg.name) ? 'bg-orange-500 text-white border-orange-500 shadow-md' : 'bg-gray-50 text-gray-600 border-gray-200 hover:border-orange-300'
+                        }`}
+                      >
+                        {excludedAllergens.includes(alg.name) ? '✕ ' : ''}{alg.name}
+                      </button>
+                    ))}
+                  </div>
+                </>
+              )}
               
               {(selectedCategories.length > 0 || excludedAllergens.length > 0) && (
                 <button 
@@ -174,9 +194,9 @@ export default function Menu() {
                   <h2 className="text-3xl font-bold font-fancy mb-6 border-l-4 border-red-600 pl-4">{categoryName}</h2>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     {dishes.map((dish: any) => (
-                      <div key={dish.token} className="bg-white rounded-3xl shadow-md overflow-hidden flex group hover:shadow-xl transition-shadow border border-gray-100">
+                      <div key={dish.token || dish.id || dish.name} className="bg-white rounded-3xl shadow-md overflow-hidden flex group hover:shadow-xl transition-shadow border border-gray-100">
                         <div className="w-1/3 overflow-hidden">
-                          <img src={dish.imageUrl} alt={dish.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                          <img src={dish.imageUrl} alt={dish.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" onError={(e) => { (e.target as HTMLImageElement).src = 'https://placehold.co/600x400/eeeeee/999999?text=Brak+zdjęcia'; }} />
                         </div>
                         <div className="w-2/3 p-6 flex flex-col justify-between">
                           <div>
@@ -184,7 +204,7 @@ export default function Menu() {
                             <p className="text-gray-500 text-xs line-clamp-2">{dish.ingredients?.map((i: any) => i.name || i).join(', ')}</p>
                           </div>
                           <div className="flex justify-between items-center mt-4">
-                            <span className="text-2xl font-black">{(dish.price / 100).toFixed(2)} PLN</span>
+                            <span className="text-2xl font-black">{dish.price ? (dish.price / 100).toFixed(2) : '0.00'} PLN</span>
                           </div>
                         </div>
                       </div>
