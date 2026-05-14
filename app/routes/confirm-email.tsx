@@ -2,6 +2,8 @@ import { useState, useEffect, useRef } from "react";
 import { Link, useSearchParams } from "react-router";
 import { useTranslation } from "react-i18next";
 
+const API_URL = import.meta.env.VITE_API_URL || "";
+
 
 export default function ConfirmEmail() {
   const { t } = useTranslation();
@@ -39,7 +41,7 @@ export default function ConfirmEmail() {
 
 const verifyEmail = async (emailValue: string, tokenValue: string) => {
     try {
-      const response = await fetch(`/api/auth/register-confirm?token=${encodeURIComponent(tokenValue)}`, {
+      const response = await fetch(`/${API_URL}/auth/register-confirm?token=${encodeURIComponent(tokenValue)}`, {
         method: "GET",
         headers: {
           Accept: "application/json",
