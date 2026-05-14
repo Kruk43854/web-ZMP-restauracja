@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { Link, useSearchParams } from "react-router";
 import { useTranslation } from "react-i18next";
 
+const API_URL = import.meta.env.VITE_API_URL || "";
 
 export default function ConfirmEmailChange() {
   const { t } = useTranslation();
@@ -34,7 +35,7 @@ export default function ConfirmEmailChange() {
     const authToken = localStorage.getItem("token");
     
     try {
-      const response = await fetch(`/api/user/me/email/confirm?verificationToken=${encodeURIComponent(tokenValue)}`, {
+      const response = await fetch(`${API_URL}/api/user/me/email/confirm?verificationToken=${encodeURIComponent(tokenValue)}`, {
         method: "PATCH",
         headers: {
           "Accept": "application/json",

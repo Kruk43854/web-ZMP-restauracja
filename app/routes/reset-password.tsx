@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router";
 import { useTranslation } from "react-i18next";
 
+const API_URL = import.meta.env.VITE_API_URL || "";
+
 
 
 export default function ResetPassword() {
@@ -54,7 +56,7 @@ export default function ResetPassword() {
     setIsSuccess(false);
 
     try {
-      const response = await fetch(`/api/auth/set-password`, {
+      const response = await fetch(`${API_URL}/api/auth/set-password`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

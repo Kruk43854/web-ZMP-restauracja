@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router";
 import { useTranslation } from "react-i18next";
 
+const API_URL = import.meta.env.VITE_API_URL || "";
+
 
 export default function ForgotPassword() {
   const { t } = useTranslation();
@@ -28,8 +30,7 @@ export default function ForgotPassword() {
     setIsSuccess(false);
 
     try {
-      const response = await fetch(
-        `/api/auth/reset-password?email=${encodeURIComponent(email)}`,
+      const response = await fetch(`${API_URL}/api/auth/reset-password?email=${encodeURIComponent(email)}`,
         {
           method: "POST",
           headers: {
