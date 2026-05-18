@@ -23,14 +23,12 @@ export function useWebSocket() {
         const wsUrl = getWebSocketUrl();
 
         const client = new Client({
-            // Używamy SockJS zamiast surowego brokerURL
             webSocketFactory: () => new SockJS(wsUrl),
             
             connectHeaders: {
                 ...(token ? { Authorization: `Bearer ${token}` } : {}),
             },
             debug: function (str) {
-                console.log('STOMP Debug: ' + str);
             },    
             reconnectDelay: 5000,
             
@@ -39,7 +37,6 @@ export function useWebSocket() {
         });
 
         client.onConnect = () => {
-            console.log('Połączono z serwerem WebSocket (SockJS)!');
             setIsConnected(true);
         };
 
@@ -50,7 +47,6 @@ export function useWebSocket() {
         };
 
         client.onWebSocketClose = () => {
-            console.log('Zakończono połączenie WebSocket');
             setIsConnected(false);
         };
 
