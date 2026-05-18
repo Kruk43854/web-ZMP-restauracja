@@ -2,6 +2,8 @@ import { useState, useEffect, useMemo } from "react";
 import { useAuth } from "../contexts/AuthContext";
 import { useTranslation } from "react-i18next";
 import i18n from "../i18n";
+import { useWebSocket } from "../hooks/useWebSocket";
+import { ref } from "process";
 
 const API_URL = import.meta.env.VITE_API_URL || "";
 
@@ -18,6 +20,26 @@ export default function Menu() {
 
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
+  const { isConnected, subscribe } = useWebSocket();
+
+  useEffect(() => {
+    if (!isConnected) return;
+    const handleMenuUpdate = () => {
+        console.log("Wykryto zmianę na serwerze! Odświeżam menu...");
+        setRefreshTrigger(prev => prev + 1);
+    };
+    const subMenuUpdates = subscribe('/topic/menu/updates', handleMenuUpdate);
+    const subMenuAvailability = subscribe('/topic/menu', handleMenuUpdate);
+    const subDictAvailability = subscribe('/topic/menu/availability', handleMenuUpdate);
+
+    return () => {
+      subMenuUpdates?.unsubscribe();
+      subMenuAvailability?.unsubscribe();
+      subDictAvailability?.unsubscribe();
+    };
+  }, [isConnected, subscribe]);
 
   useEffect(() => {
     document.title = t("menu.title", "Menu") + " - Qui la Carne";
@@ -79,7 +101,7 @@ export default function Menu() {
     };
 
     fetchData();
-  }, [isAuthenticated, i18n.language, authFetch]);
+  }, [isAuthenticated, i18n.language, authFetch, refreshTrigger]);
 
   const filteredMenu = useMemo(() => {
     return menuItems.filter(dish => {
