@@ -30,13 +30,11 @@ export default function Menu() {
         console.log("Wykryto zmianę na serwerze! Odświeżam menu...");
         setRefreshTrigger(prev => prev + 1);
     };
-    const subMenuUpdates = subscribe('/topic/menu/updates', handleMenuUpdate);
-    const subMenuAvailability = subscribe('/topic/menu', handleMenuUpdate);
+    const subMenuDishes = subscribe('/topic/menu/dishes', handleMenuUpdate);
     const subDictAvailability = subscribe('/topic/menu/availability', handleMenuUpdate);
 
     return () => {
-      subMenuUpdates?.unsubscribe();
-      subMenuAvailability?.unsubscribe();
+      subMenuDishes?.unsubscribe();
       subDictAvailability?.unsubscribe();
     };
   }, [isConnected, subscribe]);
