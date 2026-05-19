@@ -105,11 +105,13 @@ export default function Menu() {
     return menuItems.filter(dish => {
       const matchesCategory = selectedCategories.length === 0 || 
         selectedCategories.includes(dish.categoryName || dish.category?.name);
-
+      const dishIngredients = dish.ingredients || dish.ingridents || [];
+      const allDishAllergens = [
+        ...(dish.allergens || []),
+        ...dishIngredients.flatMap((i: any) => i.allergens || [])
+      ].map(a => typeof a === 'string' ? a : a.name);
       const hasExcludedAllergen = excludedAllergens.some(excluded => 
-        dish.allergens?.some((dishAlg: any) => 
-          (typeof dishAlg === 'string' ? dishAlg : dishAlg.name) === excluded
-        )
+        allDishAllergens.includes(excluded)
       );
 
       return matchesCategory && !hasExcludedAllergen;
