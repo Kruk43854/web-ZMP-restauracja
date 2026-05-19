@@ -60,8 +60,8 @@ export default function Menu() {
           }
           try {
             const [catRes, algRes] = await Promise.all([
-              authFetch('/api/dictionary/dish-categories'),
-              authFetch('/api/dictionary/allergens')
+              authFetch('/api/dishes/dictionary'),
+              authFetch('/api/dishes/allergens/dictionary')
             ]);
 
             if (catRes.ok) {
