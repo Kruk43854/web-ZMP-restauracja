@@ -3,7 +3,6 @@ import { useAuth } from "../contexts/AuthContext";
 import { useTranslation } from "react-i18next";
 import i18n from "../i18n";
 import { useWebSocket } from "../hooks/useWebSocket";
-import { ref } from "process";
 
 const API_URL = import.meta.env.VITE_API_URL || "";
 
@@ -85,7 +84,7 @@ export default function Menu() {
               (cat.dish || []).map((d: any) => ({
                 ...d,
                 categoryName: cat.category,
-                ingredients: d.ingridents || []
+                ingredients: d.ingridents || d.ingredients || []
               }))
             );
             setMenuItems(flatItems);
@@ -101,17 +100,31 @@ export default function Menu() {
     fetchData();
   }, [isAuthenticated, i18n.language, authFetch, refreshTrigger]);
 
+  const getDishAllergens = (dish: any) => {
+    const dishAlgs = dish.allergens || dish.alergens || [];
+    const dishIngs = dish.ingredients || dish.ingridents || [];
+    
+    const rawAllergens = [
+        ...dishAlgs,
+        ...dishIngs.flatMap((i: any) => i.allergens || i.alergens || [])
+    ];
+
+    return Array.from(new Set(
+        rawAllergens
+            .map(a => typeof a === 'string' ? a : (a?.name || a?.namePl || a?.nameEn))
+            .filter(Boolean)
+    )) as string[];
+  };
+
   const filteredMenu = useMemo(() => {
     return menuItems.filter(dish => {
       const matchesCategory = selectedCategories.length === 0 || 
         selectedCategories.includes(dish.categoryName || dish.category?.name);
-      const dishIngredients = dish.ingredients || dish.ingridents || [];
-      const allDishAllergens = [
-        ...(dish.allergens || []),
-        ...dishIngredients.flatMap((i: any) => i.allergens || [])
-      ].map(a => typeof a === 'string' ? a : a.name);
+      
+      const allDishAllergens = getDishAllergens(dish);
+      
       const hasExcludedAllergen = excludedAllergens.some(excluded => 
-        allDishAllergens.includes(excluded)
+        allDishAllergens.some(alg => alg.toLowerCase() === excluded.toLowerCase())
       );
 
       return matchesCategory && !hasExcludedAllergen;
@@ -202,7 +215,7 @@ export default function Menu() {
           </aside>
         )}
 
-        <section className="flex">
+        <section className="flex-1">
           {isLoading ? (
             <div className="flex justify-center py-20"><div className="animate-spin rounded-full h-16 w-16 border-t-4 border-red-700"></div></div>
           ) : filteredMenu.length === 0 ? (
@@ -214,19 +227,46 @@ export default function Menu() {
               {Object.entries(groupedMenu).map(([categoryName, dishes]: [string, any]) => (
                 <div key={categoryName}>
                   <h2 className="text-3xl font-bold font-fancy mb-6 border-l-4 border-red-600 pl-4">{categoryName}</h2>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
                     {dishes.map((dish: any) => (
                       <div key={dish.token || dish.id || dish.name} className="bg-white rounded-3xl shadow-md overflow-hidden flex group hover:shadow-xl transition-shadow border border-gray-100">
                         <div className="w-1/3 overflow-hidden">
-                          <img src={dish.imageUrl} alt={dish.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" onError={(e) => { (e.target as HTMLImageElement).src = 'https://placehold.co/600x400/eeeeee/999999?text=Brak+zdjęcia'; }} />
+                          <img 
+                            src={dish.imageUrl} 
+                            alt={dish.name} 
+                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
+                            onError={(e) => { (e.target as HTMLImageElement).src = 'https://placehold.co/600x400/eeeeee/999999?text=Brak+zdjęcia'; }} 
+                          />
                         </div>
                         <div className="w-2/3 p-6 flex flex-col justify-between">
                           <div>
                             <h3 className="text-xl font-bold mb-2">{dish.name}</h3>
-                            <p className="text-gray-500 text-xs line-clamp-2">{dish.ingredients?.map((i: any) => i.name || i).join(', ')}</p>
+                            <p className="text-gray-500 text-xs line-clamp-2 mb-2">
+                              {(dish.ingredients || dish.ingridents || []).map((i: any) => i.name || i).join(', ')}
+                            </p>
+                            
+                            {/* OTO NASZE WIDOCZNE TAGI ALERGENÓW */}
+                            {(() => {
+                              const allAllergens = getDishAllergens(dish);
+                              if (allAllergens.length > 0) {
+                                return (
+                                  <div className="flex flex-wrap gap-1 mt-2">
+                                    {allAllergens.map((alg, idx) => (
+                                      <span key={idx} className="bg-orange-50 text-orange-700 text-[10px] font-bold px-2 py-0.5 rounded-md uppercase tracking-wider border border-orange-200">
+                                        {alg}
+                                      </span>
+                                    ))}
+                                  </div>
+                                );
+                              }
+                              return null;
+                            })()}
+
                           </div>
                           <div className="flex justify-between items-center mt-4">
-                            <span className="text-2xl font-black">{dish.price ? (dish.price / 100).toFixed(2) : '0.00'} PLN</span>
+                            <span className="text-2xl font-black text-gray-800">
+                              {dish.price ? (dish.price / 100).toFixed(2) : '0.00'} PLN
+                            </span>
                           </div>
                         </div>
                       </div>
