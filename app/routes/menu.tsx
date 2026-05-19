@@ -66,11 +66,11 @@ export default function Menu() {
 
             if (catRes.ok) {
               const catData = await catRes.json();
-              setCategories(catData.data || []);
+              setCategories(catData.data?.item || []);
             }
             if (algRes.ok) {
               const algData = await algRes.json();
-              setAllergens(algData.data || []);
+              setAllergens(algData.data?.item || []);
             }
           } catch (dictionaryError) {
             console.warn("Błąd autoryzacji do słowników (403). Filtry mogą być niedostępne.");
