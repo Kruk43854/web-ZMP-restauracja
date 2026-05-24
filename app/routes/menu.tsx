@@ -245,7 +245,6 @@ export default function Menu() {
                               {(dish.ingredients || dish.ingridents || []).map((i: any) => i.name || i).join(', ')}
                             </p>
                             
-                            {/* OTO NASZE WIDOCZNE TAGI ALERGENÓW */}
                             {(() => {
                               const allAllergens = getDishAllergens(dish);
                               if (allAllergens.length > 0) {
