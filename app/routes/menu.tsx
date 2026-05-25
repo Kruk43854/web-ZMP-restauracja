@@ -61,8 +61,12 @@ export default function Menu() {
           }
           try {
             const [catRes, algRes] = await Promise.all([
-              authFetch('/api/dishes/dictionary'),
-              authFetch('/api/dishes/allergens/dictionary')
+              authFetch('/api/dishes/dictionary', { 
+                headers: { "Accept-Language": i18n.language } 
+              }),
+              authFetch('/api/dishes/allergens/dictionary', { 
+                headers: { "Accept-Language": i18n.language } 
+              })
             ]);
 
             if (catRes.ok) {
