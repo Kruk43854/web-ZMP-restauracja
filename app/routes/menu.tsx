@@ -49,7 +49,9 @@ export default function Menu() {
 
       try {
         if (isAuthenticated) {
-          const menuRes = await authFetch('/api/dishes?page=1&size=100');
+          const menuRes = await authFetch('/api/dishes?page=1&size=100', {
+            headers: { "Accept-Language": i18n.language }
+          });
           
           if (menuRes.ok) {
             const menuData = await menuRes.json();
