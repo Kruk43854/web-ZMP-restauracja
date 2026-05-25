@@ -52,10 +52,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     };
 
     const response = await fetch(`${API_URL}${url}`, config);
-    if (response.status === 401) {
+    if (response.status === 401 || response.status === 403) {
       setIsAuthenticated(false);
       setUsername(null);
       localStorage.removeItem("username");
+      clearCookies();
     }
 
     return response;
