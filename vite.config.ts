@@ -4,8 +4,12 @@ import { defineConfig } from "vitest/config";
 import tsconfigPaths from "vite-tsconfig-paths";
 import react from '@vitejs/plugin-react';
 
-export default defineConfig({
-  plugins: [ tailwindcss(), reactRouter(), tsconfigPaths(), react(),
+export default defineConfig(({ mode }) => ({
+  plugins: [
+    tailwindcss(), 
+    mode === 'test' ? null : reactRouter(), 
+    tsconfigPaths(), 
+    react(),
     {
       name: 'chrome-devtools-fix',
       configureServer(server) {
@@ -25,4 +29,4 @@ export default defineConfig({
     globals: true,
     setupFiles: './app/setupTests.ts',
   }
-});
+}));
