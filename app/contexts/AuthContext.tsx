@@ -20,9 +20,13 @@ const getCsrfToken = () => {
 
 const clearCookies = () => {
   const hostname = window.location.hostname;
-  document.cookie = "XSRF-TOKEN=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-  document.cookie = `XSRF-TOKEN=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=${hostname};`;
-  document.cookie = `XSRF-TOKEN=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=.${hostname};`;
+  const domains = ["", `; domain=${hostname}`, `; domain=.${hostname}`];
+
+  domains.forEach(domainAttr => {
+    document.cookie = `XSRF-TOKEN=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/${domainAttr}; Secure; SameSite=Lax;`;
+    document.cookie = `XSRF-TOKEN=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/${domainAttr}; Secure; SameSite=None;`;
+    document.cookie = `XSRF-TOKEN=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/${domainAttr};`;
+  });
 };
 
 export function AuthProvider({ children }: { children: ReactNode }) {
