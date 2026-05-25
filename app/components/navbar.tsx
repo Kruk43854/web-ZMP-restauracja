@@ -40,7 +40,7 @@ export default function Navbar() {
       <div className="max-w-7xl flex flex-wrap items-center justify-between mx-auto p-4">
         
         <Link to="/" className="flex items-center space-x-3 rtl:space-x-reverse">
-          <p className="text-2xl font-bold">🍕</p> 
+          <img src="/PateQui.png" className="h-10 w-10 rounded-full object-cover" alt="Qui la Carne Logo" /> 
           <span className="self-center text-4xl font-semibold font-fancy whitespace-nowrap text-white">
             <i>Qui la Carne</i>
           </span>
