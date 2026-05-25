@@ -96,6 +96,10 @@ export default function Settings() {
     } finally {
       setIsEmailLoading(false);
     }
+    setTimeout(() => {
+        logout();
+      }, 1500);
+
   };
 
   const handleUpdatePassword = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -155,6 +159,10 @@ export default function Settings() {
     } catch {
       alert(t("settings.connection_error"));
     }
+    setTimeout(() => {
+        logout();
+      }, 1500);
+
   };
 
   if (!isAuthenticated) {
