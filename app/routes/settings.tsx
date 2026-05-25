@@ -58,9 +58,10 @@ export default function Settings() {
 
       setIsProfileSuccess(true);
       setProfileMsg(data?.message ?? t("settings.profile.success_username"));
-      localStorage.setItem("username", username);
+      setTimeout(() => {
+        logout();
+      }, 1500);
 
-      setTimeout(() => window.location.reload(), 1500);
     } catch {
       setProfileMsg(t("settings.connection_error"));
     } finally {
