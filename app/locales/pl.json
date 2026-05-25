@@ -251,5 +251,15 @@
     "hours": "Godziny wizyty",
     "unassigned": "Nieprzypisany",
     "quantity": "szt:"
+  },
+  "footer": {
+    "subtitle": "Najlepsza włoska restauracja w mieście.",
+    "links": {
+      "home": "Strona główna",
+      "menu": "Menu",
+      "about": "O nas",
+      "dashboard": "Ustawienia"
+    },
+    "rights": "Wszelkie prawa zastrzeżone."
   }
 }

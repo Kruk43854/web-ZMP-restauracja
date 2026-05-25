@@ -251,5 +251,15 @@
     "hours": "Visit Hours",
     "unassigned": "Unassigned",
     "quantity": "qty:"
-  }
+  },
+  "footer": {
+    "subtitle": "The best Italian restaurant in town.",
+    "links": {
+      "home": "Home",
+      "menu": "Menu",
+      "about": "About Us",
+      "dashboard": "Settings"
+    },
+    "rights": "All rights reserved."
+   }
 }
