@@ -261,5 +261,13 @@
       "dashboard": "Settings"
     },
     "rights": "All rights reserved."
-   }
+   },
+  "menu": {
+    "title": "Menu",
+    "error_connection": "Connection error with the server.",
+    "filter_categories": "Categories",
+    "filter_allergens": "Exclude Allergens",
+    "clear_filters": "Clear All Filters",
+    "no_results": "No dishes found matching your criteria."
+}
 }
