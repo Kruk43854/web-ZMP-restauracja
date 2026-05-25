@@ -19,7 +19,10 @@ const getCsrfToken = () => {
 };
 
 const clearCookies = () => {
+  const hostname = window.location.hostname;
   document.cookie = "XSRF-TOKEN=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+  document.cookie = `XSRF-TOKEN=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=${hostname};`;
+  document.cookie = `XSRF-TOKEN=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=.${hostname};`;
 };
 
 export function AuthProvider({ children }: { children: ReactNode }) {
@@ -144,7 +147,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const logout = async () => {
     try {
-      await authFetch('/api/auth/logout', { method: "POST" });
+      await authFetch('/api/auth/logout', {
+         method: "POST" 
+        });
     } catch (error) {
       console.error("Logout error", error);
     } finally {
