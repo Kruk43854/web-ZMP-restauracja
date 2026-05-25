@@ -18,6 +18,10 @@ const getCsrfToken = () => {
   return match ? match[2] : null;
 };
 
+const clearCookies = () => {
+  document.cookie = "XSRF-TOKEN=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+};
+
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [username, setUsername] = useState<string | null>(null);
@@ -146,6 +150,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setIsAuthenticated(false);
       setUsername(null);
       localStorage.removeItem("username");
+      clearCookies();
     }
   };
 
