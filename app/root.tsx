@@ -4,6 +4,7 @@ import { AuthProvider } from "./contexts/AuthContext";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 
 import appStylesHref from "./app.css?url";
+import Footer from "./components/footer";
 
 export const links = () => [
   { rel: "stylesheet", href: appStylesHref },
@@ -25,6 +26,7 @@ export default function App() {
           <AuthProvider>
             <Navbar /> 
             <Outlet />
+            <Footer />
           </AuthProvider>
         </GoogleOAuthProvider>
         <ScrollRestoration />
