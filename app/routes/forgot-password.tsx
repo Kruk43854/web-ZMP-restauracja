@@ -4,69 +4,83 @@ import { useTranslation } from "react-i18next";
 
 const API_URL = import.meta.env.VITE_API_URL || "";
 
+interface ApiResponse {
+  success?: boolean;
+  message?: string;
+  error?: string;
+  errors?: string[];
+}
+
+interface FormStatus {
+  loading: boolean;
+  message: string;
+  isSuccess: boolean;
+}
 
 export default function ForgotPassword() {
   const { t } = useTranslation();
   const [email, setEmail] = useState("");
-  const [message, setMessage] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [isSuccess, setIsSuccess] = useState(false);
 
-    useEffect(() => {
-    document.title = t("forgotPassword.title") + " - Qui la Carne";
+  const [status, setStatus] = useState<FormStatus>({
+    loading: false,
+    message: "",
+    isSuccess: false,
+  });
+
+  useEffect(() => {
+    document.title = `${t("forgotPassword.title")} - Qui la Carne`;
   }, [t]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (!email.trim()) {
-      setMessage(t("forgotPassword.error_email_required"));
-      setIsSuccess(false);
+      setStatus({ loading: false, message: t("forgotPassword.error_email_required"), isSuccess: false });
       return;
     }
 
-    setLoading(true);
-    setMessage(t("forgotPassword.sending"));
-    setIsSuccess(false);
+    setStatus({ loading: true, message: t("forgotPassword.sending"), isSuccess: false });
 
     try {
-      const response = await fetch(`${API_URL}/api/auth/reset-password?email=${encodeURIComponent(email)}`,
-        {
-          method: "POST",
-          headers: {
-            Accept: "application/json",
-          },
-        }
-      );
+      const response = await fetch(`${API_URL}/api/auth/reset-password?email=${encodeURIComponent(email)}`, {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+        },
+      });
 
-      let data: any = null;
-      try {
-        data = await response.json();
-      } catch {
-        data = null;
-      }
+      const data: ApiResponse = await response.json().catch(() => ({}));
 
       if (!response.ok || data?.success === false) {
         const serverMsg =
-          (data && (data.message || data.error)) ??
-          (data && Array.isArray(data.errors) && data.errors.join(", ")) ??
+          data?.message ||
+          data?.error ||
+          (Array.isArray(data?.errors) ? data.errors.join(", ") : null) ||
           t("forgotPassword.error_sending_failed");
-        setMessage(serverMsg);
-        setIsSuccess(false);
+
+        setStatus({ loading: false, message: serverMsg, isSuccess: false });
         return;
       }
 
-      setIsSuccess(true);
-      setMessage(data?.message ?? t("forgotPassword.success_message"));
+      setStatus({
+        loading: false,
+        message: data?.message || t("forgotPassword.success_message"),
+        isSuccess: true,
+      });
       setEmail("");
     } catch (error) {
       console.error(error);
-      setMessage(t("forgotPassword.connection_error"));
-      setIsSuccess(false);
-    } finally {
-      setLoading(false);
+      setStatus({ loading: false, message: t("forgotPassword.connection_error"), isSuccess: false });
     }
   };
+
+  const statusBoxClasses = `p-3 rounded-xl text-sm font-medium border text-center ${
+    status.isSuccess ? 'bg-green-50 text-green-700 border-green-200' : 'bg-red-50 text-red-600 border-red-200'
+  }`;
+
+  const submitButtonClasses = `w-full text-white font-bold text-lg py-4 rounded-xl transition-colors shadow-lg mt-2 flex justify-center items-center ${
+    status.loading ? 'bg-red-400 cursor-not-allowed' : 'bg-red-700 hover:bg-red-800 hover:shadow-xl transform hover:-translate-y-1'
+  }`;
 
   return (
     <main className="grow pt-16">
@@ -88,11 +102,9 @@ export default function ForgotPassword() {
             onSubmit={handleSubmit} 
             className="bg-white p-8 rounded-3xl shadow-2xl flex flex-col gap-5 w-full text-black border border-gray-100"
           >
-            {message && (
-              <div className={`p-3 rounded-xl text-sm font-medium border text-center ${
-                isSuccess ? 'bg-green-50 text-green-700 border-green-200' : 'bg-red-50 text-red-600 border-red-200'
-              }`}>
-                {message}
+            {status.message && (
+              <div className={statusBoxClasses}>
+                {status.message}
               </div>
             )}
 
@@ -107,12 +119,10 @@ export default function ForgotPassword() {
 
             <button 
               type="submit" 
-              disabled={loading}
-              className={`w-full text-white font-bold text-lg py-4 rounded-xl transition-colors shadow-lg mt-2 flex justify-center items-center ${
-                loading ? 'bg-red-400 cursor-not-allowed' : 'bg-red-700 hover:bg-red-800 hover:shadow-xl transform hover:-translate-y-1'
-              }`}
+              disabled={status.loading}
+              className={submitButtonClasses}
             >
-              {loading ? (
+              {status.loading ? (
                 <span className="animate-pulse">{t("forgotPassword.sending")}</span>
               ) : (
                 t("forgotPassword.submit")
