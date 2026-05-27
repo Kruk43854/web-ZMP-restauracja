@@ -117,7 +117,6 @@ export default function Navbar() {
           <ul className="font-medium flex flex-col p-2 mt-2 rounded-2xl bg-green-700 md:p-0.5 md:w-auto md:flex-row md:gap-1 md:mt-0 md:border-0 items-center">
             <li><Link to="/menu" className="block py-2 px-4 text-center text-white rounded-2xl hover:bg-green-800 transition-colors">{t('navbar.menu')}</Link></li>
             <li><Link to="/reservation" className="block py-2 px-4 text-center text-white rounded-2xl hover:bg-green-800 transition-colors">{t('navbar.reservation')}</Link></li>
-            <li><Link to="/about" className="block py-2 px-4 text-center text-white rounded-2xl hover:bg-green-800 transition-colors">{t('navbar.about')}</Link></li>
             <li><Link to="/my-reservations" className="block py-2 px-4 text-center text-white rounded-2xl hover:bg-green-800 transition-colors">{t('navbar.myReservations')}</Link></li>
 
             {isAuthenticated ? (

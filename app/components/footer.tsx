@@ -24,9 +24,6 @@ export default function Footer() {
           <Link to="/menu" className="hover:text-red-500 transition-colors">
             {t("footer.links.menu") ?? "Menu"}
           </Link>
-          <Link to="/about" className="hover:text-red-500 transition-colors">
-            {t("footer.links.about") ?? "O nas"}
-          </Link>
           <Link to="/settings" className="hover:text-red-500 transition-colors">
             {t("footer.links.dashboard") ?? "Ustawienia"}
           </Link>
