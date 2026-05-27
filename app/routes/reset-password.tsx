@@ -3,24 +3,39 @@ import { Link, useNavigate, useSearchParams } from "react-router";
 import { useTranslation } from "react-i18next";
 
 const API_URL = import.meta.env.VITE_API_URL || "";
+const MIN_PASSWORD_LENGTH = 6;
+const REDIRECT_DELAY_MS = 5000;
 
+interface ApiResponse {
+  success?: boolean;
+  message?: string;
+  error?: string;
+}
 
+interface FormStatus {
+  loading: boolean;
+  message: string;
+  isSuccess: boolean;
+}
 
 export default function ResetPassword() {
   const { t } = useTranslation();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
+
   const [email, setEmail] = useState("");
   const [token, setToken] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [message, setMessage] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [isSuccess, setIsSuccess] = useState(false);
 
+  const [status, setStatus] = useState<FormStatus>({
+    loading: false,
+    message: "",
+    isSuccess: false,
+  });
 
-    useEffect(() => {
-    document.title = t("resetPassword.title") + " - Qui la Carne";
+  useEffect(() => {
+    document.title = `${t("resetPassword.title")} - Qui la Carne`;
   }, [t]);
 
   useEffect(() => {
@@ -31,7 +46,7 @@ export default function ResetPassword() {
     if (tokenParam) setToken(tokenParam);
     
     if (!tokenParam) {
-       setMessage(t("resetPassword.error_missing_token_link"));
+      setStatus(prev => ({ ...prev, message: t("resetPassword.error_missing_token_link") }));
     }
   }, [searchParams, t]);
 
@@ -39,21 +54,19 @@ export default function ResetPassword() {
     e.preventDefault();
 
     if (!token.trim()) {
-      setMessage(t("resetPassword.error_missing_token_submit"));
+      setStatus({ loading: false, message: t("resetPassword.error_missing_token_submit"), isSuccess: false });
       return;
     }
     if (password !== confirmPassword) {
-      setMessage(t("resetPassword.error_password_mismatch"));
+      setStatus({ loading: false, message: t("resetPassword.error_password_mismatch"), isSuccess: false });
       return;
     }
-    if (password.length < 6) {
-      setMessage(t("resetPassword.error_password_short"));
+    if (password.length < MIN_PASSWORD_LENGTH) {
+      setStatus({ loading: false, message: t("resetPassword.error_password_short"), isSuccess: false });
       return;
     }
 
-    setLoading(true);
-    setMessage(t("resetPassword.saving"));
-    setIsSuccess(false);
+    setStatus({ loading: true, message: t("resetPassword.saving"), isSuccess: false });
 
     try {
       const response = await fetch(`${API_URL}/api/auth/set-password`, {
@@ -62,42 +75,41 @@ export default function ResetPassword() {
           "Content-Type": "application/json",
           Accept: "application/json",
         },
-        body: JSON.stringify({
-          token,
-          password,
-          confirmPassword,
-        }),
+        body: JSON.stringify({ token, password, confirmPassword }),
       });
 
-      let data: any = null;
-      try {
-        data = await response.json();
-      } catch {
-        data = null;
-      }
+      const data: ApiResponse | null = await response.json().catch(() => null);
 
       if (!response.ok || data?.success === false) {
-        const serverMsg = (data && (data.message || data.error)) ?? t("resetPassword.error_setting_failed");
-        setMessage(serverMsg);
+        const serverMsg = data?.message || data?.error || t("resetPassword.error_setting_failed");
+        setStatus({ loading: false, message: serverMsg, isSuccess: false });
         return;
       }
 
-      setIsSuccess(true);
-      setMessage(data?.message ?? t("resetPassword.success_message"));
+      setStatus({
+        loading: false,
+        message: data?.message || t("resetPassword.success_message"),
+        isSuccess: true,
+      });
+      
       setPassword("");
       setConfirmPassword("");
 
-      setTimeout(() => navigate('/login'), 5000);
+      setTimeout(() => navigate('/login'), REDIRECT_DELAY_MS);
 
     } catch (error) {
       console.error(error);
-      setMessage(t("resetPassword.connection_error"));
-    } finally {
-      setLoading(false);
+      setStatus({ loading: false, message: t("resetPassword.connection_error"), isSuccess: false });
     }
-  
   };
-  
+
+  const statusBoxClasses = `p-3 rounded-xl text-sm font-medium border text-center ${
+    status.isSuccess ? 'bg-green-50 text-green-700 border-green-200' : 'bg-red-50 text-red-600 border-red-200'
+  }`;
+
+  const submitButtonClasses = `w-full text-white font-bold text-lg py-4 rounded-xl transition-colors shadow-lg mt-2 flex justify-center items-center ${
+    status.loading || !token ? 'bg-red-400 cursor-not-allowed' : 'bg-red-700 hover:bg-red-800 hover:shadow-xl transform hover:-translate-y-1'
+  }`;
 
   return (
     <main className="grow pt-16">
@@ -115,22 +127,22 @@ export default function ResetPassword() {
             onSubmit={handleSubmit} 
             className="bg-white p-8 rounded-3xl shadow-2xl flex flex-col gap-5 w-full text-black border border-gray-100"
           >
-            {!isSuccess && (
+            {!status.isSuccess && (
               <p className="text-sm text-gray-600 mb-2">
                 {t("resetPassword.description")}
               </p>
             )}
 
-            {message && (
-              <div className={`p-3 rounded-xl text-sm font-medium border text-center ${
-                isSuccess ? 'bg-green-50 text-green-700 border-green-200' : 'bg-red-50 text-red-600 border-red-200'
-              }`}>
-                {message}
+            {status.message && (
+              <div className={statusBoxClasses}>
+                {status.message}
               </div>
             )}
 
             <div className="flex flex-col text-left">
-               <label className="text-xs font-bold text-gray-500 mb-1 ml-1 uppercase tracking-wider">{t("resetPassword.account_label")}</label>
+               <label className="text-xs font-bold text-gray-500 mb-1 ml-1 uppercase tracking-wider">
+                 {t("resetPassword.account_label")}
+               </label>
                <input
                   type="email"
                   value={email}
@@ -139,7 +151,7 @@ export default function ResetPassword() {
                />
             </div>
 
-            {!isSuccess && (
+            {!status.isSuccess && (
               <>
                 <input
                   type="password"
@@ -161,12 +173,10 @@ export default function ResetPassword() {
 
                 <button 
                   type="submit" 
-                  disabled={loading || !token}
-                  className={`w-full text-white font-bold text-lg py-4 rounded-xl transition-colors shadow-lg mt-2 flex justify-center items-center ${
-                    loading || !token ? 'bg-red-400 cursor-not-allowed' : 'bg-red-700 hover:bg-red-800 hover:shadow-xl transform hover:-translate-y-1'
-                  }`}
+                  disabled={status.loading || !token}
+                  className={submitButtonClasses}
                 >
-                  {loading ? (
+                  {status.loading ? (
                     <span className="animate-pulse">{t("resetPassword.saving")}</span>
                   ) : (
                     t("resetPassword.submit")
@@ -176,7 +186,7 @@ export default function ResetPassword() {
             )}
 
             <div className="text-center text-sm mt-2">
-              {isSuccess ? (
+              {status.isSuccess ? (
                   <Link to="/login" className="w-full block bg-red-700 text-white font-bold py-3 rounded-xl hover:bg-red-800 mt-2">
                     {t("resetPassword.success_button")}
                   </Link>
