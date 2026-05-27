@@ -3,17 +3,29 @@ import type { ReactNode } from "react";
 
 const API_URL = import.meta.env.VITE_API_URL || "";
 
+export interface LoginCredentials {
+  username?: string;
+  password?: string;
+  [key: string]: string | undefined; 
+}
+
+interface AuthResponse {
+  data?: {
+    username?: string;
+  };
+  username?: string;
+}
+
 interface AuthContextType {
   isAuthenticated: boolean;
   username: string | null;
-  login: (data: any) => Promise<boolean>;
+  login: (credentials: LoginCredentials) => Promise<boolean>;
   loginGoogle: (token: string) => Promise<boolean>;
   logout: () => Promise<void>;
   authFetch: (url: string, options?: RequestInit) => Promise<Response>;
 }
 
-const AuthContext = createContext<AuthContextType | null>(null);
-const getCsrfToken = () => {
+const getCsrfToken = (): string | null => {
   const match = document.cookie.match(new RegExp('(^| )XSRF-TOKEN=([^;]+)'));
   return match ? match[2] : null;
 };
@@ -29,17 +41,20 @@ const clearCookies = () => {
   });
 };
 
+const AuthContext = createContext<AuthContextType | null>(null);
+
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [username, setUsername] = useState<string | null>(null);
   const [isInitializing, setIsInitializing] = useState<boolean>(true);
 
-  const authFetch = async (url: string, options: RequestInit = {}) => {
+  const authFetch = async (url: string, options: RequestInit = {}): Promise<Response> => {
     const headers = new Headers(options.headers || {});
 
     if (!headers.has("Accept")) {
       headers.set("Accept", "application/json");
     }
+    
     if (options.body && typeof options.body === 'string' && !headers.has("Content-Type")) {
       headers.set("Content-Type", "application/json");
     }
@@ -59,6 +74,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     };
 
     const response = await fetch(`${API_URL}${url}`, config);
+    
     if (response.status === 401 || response.status === 403) {
       setIsAuthenticated(false);
       setUsername(null);
@@ -75,9 +91,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         const response = await authFetch('/api/auth/refresh', { method: "POST" });
 
         if (response.ok) {
-          const result = await response.json();
-          setIsAuthenticated(true);
+          const result: AuthResponse = await response.json().catch(() => ({}));
           const fetchedName = result?.data?.username || result?.username || localStorage.getItem("username");
+          
+          setIsAuthenticated(true);
           if (fetchedName) {
             setUsername(fetchedName);
             localStorage.setItem("username", fetchedName);
@@ -97,7 +114,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     checkAuthStatus();
   }, []);
 
-  const login = async (credentials: any) => {
+  const login = async (credentials: LoginCredentials): Promise<boolean> => {
     try {
       const response = await fetch(`${API_URL}/api/auth/login`, {
         method: "POST",
@@ -107,7 +124,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       });
 
       if (response.ok) {
-        const result = await response.json();
+        const result: AuthResponse = await response.json().catch(() => ({}));
         const user = result?.data?.username || result?.username;
         
         setIsAuthenticated(true);
@@ -123,7 +140,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  const loginGoogle = async (token: string) => {
+  const loginGoogle = async (token: string): Promise<boolean> => {
     try {
       const response = await fetch(`${API_URL}/api/auth/google`, {
         method: "POST",
@@ -133,7 +150,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       });
 
       if (response.ok) {
-        const data = await response.json();
+        const data: AuthResponse = await response.json().catch(() => ({}));
         const user = data?.data?.username || data?.username;
         
         setIsAuthenticated(true);
@@ -149,13 +166,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  const logout = async () => {
+  const logout = async (): Promise<void> => {
     try {
-      await authFetch('/api/auth/logout', {
-         method: "POST" 
-        });
+      await authFetch('/api/auth/logout', { method: "POST" });
     } catch (error) {
-      console.error("Logout error", error);
     } finally {
       setIsAuthenticated(false);
       setUsername(null);
@@ -179,7 +193,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   );
 }
 
-export function useAuth() {
+export function useAuth(): AuthContextType {
   const context = useContext(AuthContext);
   if (!context) {
     throw new Error("useAuth must be used within an AuthProvider");
