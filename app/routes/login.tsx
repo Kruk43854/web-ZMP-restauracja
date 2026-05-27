@@ -4,25 +4,33 @@ import { useTranslation } from "react-i18next";
 import { useAuth } from "../contexts/AuthContext";
 import { GoogleLogin } from "@react-oauth/google";
 
+interface UIStatus {
+  loading: boolean;
+  error: string | null;
+}
+
+interface GoogleCredentialResponse {
+  credential?: string;
+  clientId?: string;
+  select_by?: string;
+}
+
 export default function Login() {
   const { t } = useTranslation();
   const { login, loginGoogle } = useAuth(); 
-  
-  const [username, setUsernameInput] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-  
   const navigate = useNavigate();
+  
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [status, setStatus] = useState<UIStatus>({ loading: false, error: null });
 
   useEffect(() => {
-    document.title = t("login.title") + " - Qui la Carne";
+    document.title = `${t("login.title")} - Qui la Carne`;
   }, [t]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError("");
-    setIsLoading(true);
+    setStatus({ loading: true, error: null });
 
     try {
       const success = await login({ username, password });
@@ -30,18 +38,17 @@ export default function Login() {
       if (success) {
         navigate("/");
       } else {
-        setError(t('login.errors.invalidCredentials', 'Nieprawidłowe dane logowania.'));
+        setStatus({ loading: false, error: t('login.errors.invalidCredentials', 'Nieprawidłowe dane logowania.') });
       }
     } catch (err) {
-      setError(t('login.errors.serverError', 'Błąd serwera.'));
-    } finally {
-      setIsLoading(false);
+      setStatus({ loading: false, error: t('login.errors.serverError', 'Błąd serwera.') });
     }
   };
 
-  const handleGoogleSuccess = async (credentialResponse: any) => {
-    setError("");
-    setIsLoading(true);
+  const handleGoogleSuccess = async (credentialResponse: GoogleCredentialResponse) => {
+    if (!credentialResponse.credential) return;
+    
+    setStatus({ loading: true, error: null });
 
     try {
       const success = await loginGoogle(credentialResponse.credential);
@@ -49,14 +56,20 @@ export default function Login() {
       if (success) {
         navigate("/"); 
       } else {
-        setError(t('login.errors.invalidCredentials', 'Błąd logowania.'));
+        setStatus({ loading: false, error: t('login.errors.invalidCredentials', 'Błąd logowania.') });
       }
     } catch (err) {
-      setError(t('login.errors.serverError', 'Błąd serwera.'));
-    } finally {
-      setIsLoading(false);
+      setStatus({ loading: false, error: t('login.errors.serverError', 'Błąd serwera.') });
     }
   };
+
+  const handleGoogleError = () => {
+    setStatus((prev) => ({ ...prev, error: t('login.errors.googleFailed', 'Błąd połączenia z Google') }));
+  };
+
+  const submitButtonClasses = `w-full text-white font-bold text-lg py-4 rounded-xl transition-colors shadow-lg mt-2 flex justify-center items-center ${
+    status.loading ? 'bg-red-400 cursor-not-allowed' : 'bg-red-700 hover:bg-red-800 hover:shadow-xl transform hover:-translate-y-1'
+  }`;
 
   return (
     <main className="grow pt-16">
@@ -78,9 +91,9 @@ export default function Login() {
             onSubmit={handleLogin} 
             className="bg-white p-8 rounded-3xl shadow-2xl flex flex-col gap-5 w-full text-black border border-gray-100"
           >
-            {error && (
+            {status.error && (
               <div className="bg-red-50 text-red-600 p-3 rounded-xl text-sm font-medium border border-red-200">
-                {error}
+                {status.error}
               </div>
             )}
             
@@ -89,7 +102,7 @@ export default function Login() {
               placeholder={t('login.usernamePlaceholder')}
               required
               value={username}
-              onChange={(e) => setUsernameInput(e.target.value)}
+              onChange={(e) => setUsername(e.target.value)}
               className="p-4 rounded-xl bg-gray-50 border border-gray-200 focus:border-red-500 focus:ring-2 focus:ring-red-200 outline-none transition-all text-left"
             />
 
@@ -104,12 +117,10 @@ export default function Login() {
 
             <button 
               type="submit"
-              disabled={isLoading}
-              className={`w-full text-white font-bold text-lg py-4 rounded-xl transition-colors shadow-lg mt-2 flex justify-center items-center ${
-                isLoading ? 'bg-red-400 cursor-not-allowed' : 'bg-red-700 hover:bg-red-800 hover:shadow-xl transform hover:-translate-y-1'
-              }`}
+              disabled={status.loading}
+              className={submitButtonClasses}
             >
-              {isLoading ? (
+              {status.loading ? (
                 <span className="animate-pulse">{t('login.loading')}</span>
               ) : (
                 t('login.submitBtn')
@@ -126,7 +137,7 @@ export default function Login() {
               <div className="flex justify-center w-full mt-1">
                  <GoogleLogin
                    onSuccess={handleGoogleSuccess}
-                   onError={() => setError(t('login.errors.googleFailed', 'Błąd połączenia z Google'))}
+                   onError={handleGoogleError}
                    useOneTap
                    theme="outline"
                    shape="pill"
