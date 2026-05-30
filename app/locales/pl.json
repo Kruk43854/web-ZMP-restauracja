@@ -206,7 +206,7 @@
     "no_tables": "Brak wolnych stolików w wybranym terminie.",
     "choose_table": "Wybierz stolik",
     "dishes": "Dania",
-    "optional": "opcjonalnie",
+    "optional": "wymagane",
     "notePlaceholder": "Notatka dla kucharza (np. bez cebuli)",
     "loading": "Przetwarzanie...",
     "submitBtn": "Zarezerwuj teraz",

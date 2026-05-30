@@ -206,7 +206,7 @@
     "no_tables": "No available tables for the selected time.",
     "choose_table": "Choose Table",
     "dishes": "Dishes",
-    "optional": "optional",
+    "optional": "required",
     "notePlaceholder": "Note for the chef (e.g., no onions)",
     "loading": "Processing...",
     "submitBtn": "Reserve Now",
