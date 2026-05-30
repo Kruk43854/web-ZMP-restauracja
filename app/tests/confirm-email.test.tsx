@@ -1,7 +1,7 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { MemoryRouter } from 'react-router';
-import ConfirmEmail from './confirm-email';
+import ConfirmEmail from '../routes/confirm-email';
 
 vi.mock('react-i18next', () => ({
   useTranslation: () => ({ t: (key: string) => key })

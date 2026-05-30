@@ -1,7 +1,7 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { MemoryRouter } from 'react-router';
-import MyReservations from './my-reservations';
+import MyReservations from '../routes/my-reservations';
 import * as AuthContext from '../contexts/AuthContext';
 
 vi.mock('react-i18next', async (importOriginal) => {

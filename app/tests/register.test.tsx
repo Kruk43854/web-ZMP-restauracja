@@ -1,7 +1,7 @@
 import { render, screen, fireEvent, act } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { MemoryRouter } from 'react-router';
-import Register from './register';
+import Register from '../routes/register';
 
 vi.mock('react-i18next', () => ({
   useTranslation: () => ({ t: (key: string) => key })

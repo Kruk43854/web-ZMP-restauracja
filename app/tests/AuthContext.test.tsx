@@ -1,6 +1,6 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { AuthProvider, useAuth } from './AuthContext';
+import { AuthProvider, useAuth } from '../contexts/AuthContext';
 
 global.fetch = vi.fn();
 

@@ -1,6 +1,6 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import Menu from './menu';
+import Menu from '../routes//menu';
 import * as AuthContext from '../contexts/AuthContext';
 
 vi.mock('react-i18next', async (importOriginal) => {

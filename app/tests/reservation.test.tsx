@@ -2,7 +2,7 @@ import { render, screen } from '@testing-library/react';
 import { act } from 'react'; 
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { MemoryRouter } from 'react-router';
-import Reservation from './reservation';
+import Reservation from '../routes/reservation';
 import * as AuthContext from '../contexts/AuthContext';
 
 vi.mock('react-i18next', () => ({
