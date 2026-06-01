@@ -12,18 +12,23 @@ export interface LoginCredentials {
 interface AuthResponse {
   data?: {
     username?: string;
+    roles?: string[];
   };
   username?: string;
+  roles?: string[];
 }
 
 interface AuthContextType {
   isAuthenticated: boolean;
   username: string | null;
+  roles: string[]; 
   login: (credentials: LoginCredentials) => Promise<boolean>;
   loginGoogle: (token: string) => Promise<boolean>;
   logout: () => Promise<void>;
   authFetch: (url: string, options?: RequestInit) => Promise<Response>;
 }
+
+const REQUIRED_ROLE = "ROLE_CLIENT"; 
 
 const getCsrfToken = (): string | null => {
   const match = document.cookie.match(new RegExp('(^| )XSRF-TOKEN=([^;]+)'));
@@ -46,6 +51,7 @@ const AuthContext = createContext<AuthContextType | null>(null);
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [username, setUsername] = useState<string | null>(null);
+  const [roles, setRoles] = useState<string[]>([]);
   const [isInitializing, setIsInitializing] = useState<boolean>(true);
 
   const authFetch = async (url: string, options: RequestInit = {}): Promise<Response> => {
@@ -74,11 +80,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     };
 
     const response = await fetch(`${API_URL}${url}`, config);
-    
     if (response.status === 401 || response.status === 403) {
       setIsAuthenticated(false);
       setUsername(null);
-      localStorage.removeItem("username");
+      setRoles([]);
       clearCookies();
     }
 
@@ -88,24 +93,27 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     const checkAuthStatus = async () => {
       try {
-        const response = await authFetch('/api/auth/refresh', { method: "POST" });
+        const response = await authFetch('/api/auth/me', { method: "GET" });
 
         if (response.ok) {
           const result: AuthResponse = await response.json().catch(() => ({}));
-          const fetchedName = result?.data?.username || result?.username || localStorage.getItem("username");
+          const fetchedRoles = result?.data?.roles || result?.roles || [];
+          const fetchedName = result?.data?.username || result?.username || "User";
+
+          if (!fetchedRoles.includes(REQUIRED_ROLE)) {
+            throw new Error("Brak dostępu. Użytkownik nie jest klientem.");
+          }
           
           setIsAuthenticated(true);
-          if (fetchedName) {
-            setUsername(fetchedName);
-            localStorage.setItem("username", fetchedName);
-          }
+          setUsername(fetchedName);
+          setRoles(fetchedRoles);
         } else {
-          setIsAuthenticated(false);
-          setUsername(null);
-          localStorage.removeItem("username");
+          throw new Error("Brak aktywnej sesji");
         }
       } catch (error) {
         setIsAuthenticated(false);
+        setUsername(null);
+        setRoles([]);
       } finally {
         setIsInitializing(false);
       }
@@ -119,23 +127,30 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const response = await fetch(`${API_URL}/api/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(credentials),
         credentials: "include", 
+        body: JSON.stringify(credentials),
       });
 
       if (response.ok) {
         const result: AuthResponse = await response.json().catch(() => ({}));
-        const user = result?.data?.username || result?.username;
+        const userRoles = result?.data?.roles || result?.roles || [];
+
+        if (!userRoles.includes(REQUIRED_ROLE)) {
+          await fetch(`${API_URL}/api/auth/logout`, { method: "POST", credentials: "include" }).catch(() => {});
+          clearCookies();
+          return false;
+        }
+
+        const user = result?.data?.username || result?.username || credentials.username || "User";
         
         setIsAuthenticated(true);
-        if (user) {
-          setUsername(user);
-          localStorage.setItem("username", user); 
-        }
+        setUsername(user);
+        setRoles(userRoles);
+        
         return true;
       }
       return false;
-    } catch (error) {
+    } catch (err) {
       return false;
     }
   };
@@ -151,13 +166,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
       if (response.ok) {
         const data: AuthResponse = await response.json().catch(() => ({}));
-        const user = data?.data?.username || data?.username;
+        const userRoles = data?.data?.roles || data?.roles || [];
+
+        if (!userRoles.includes(REQUIRED_ROLE)) {
+          await fetch(`${API_URL}/api/auth/logout`, { method: "POST", credentials: "include" }).catch(() => {});
+          clearCookies();
+          return false;
+        }
+
+        const user = data?.data?.username || data?.username || "User";
         
         setIsAuthenticated(true);
-        if (user) {
-          setUsername(user);
-          localStorage.setItem("username", user);
-        }
+        setUsername(user);
+        setRoles(userRoles);
+        
         return true;
       }
       return false;
@@ -173,7 +195,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     } finally {
       setIsAuthenticated(false);
       setUsername(null);
-      localStorage.removeItem("username");
+      setRoles([]);
       clearCookies();
     }
   };
@@ -187,7 +209,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, username, login, loginGoogle, logout, authFetch }}>
+    <AuthContext.Provider value={{ isAuthenticated, username, roles, login, loginGoogle, logout, authFetch }}>
       {children}
     </AuthContext.Provider>
   );
