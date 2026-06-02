@@ -23,7 +23,7 @@ describe('AuthContext', () => {
   it('powinien zalogować użytkownika po udanym odświeżeniu sesji', async () => {
     (global.fetch as ReturnType<typeof vi.fn>).mockResolvedValueOnce({
       ok: true,
-      json: async () => ({ data: { username: 'MateuszTestowy' } }),
+      json: async () => ({ data: { username: 'TestUser', roles: ['ROLE_CLIENT'] } }),
     });
 
     render(
@@ -36,7 +36,7 @@ describe('AuthContext', () => {
       expect(screen.getByTestId('auth-status')).toHaveTextContent('Zalogowany');
     });
     
-    expect(screen.getByTestId('username-display')).toHaveTextContent('MateuszTestowy');
+    expect(screen.getByTestId('username-display')).toHaveTextContent('TestUser');
     expect(global.fetch).toHaveBeenCalledTimes(1);
   });
 
